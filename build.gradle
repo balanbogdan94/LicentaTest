@@ -1,0 +1,51 @@
+
+allprojects {
+    group = 'ro.cerner.internship'
+    version = '1.0'
+}
+
+subprojects {
+    apply plugin: 'java'
+    apply plugin: 'maven'
+    
+    repositories {
+        mavenLocal()
+        mavenCentral()
+    }
+}
+
+project(':core') {
+    dependencies {
+        compile project(':data-acquisition-api'), project(':persistence-api')
+    }
+}
+
+project(':bitalino-data-acquisition') {
+    dependencies {
+        compile project(':data-acquisition-api')
+    }
+}
+
+project(':arduino-data-acquisition') {
+    dependencies {
+        compile project(':data-acquisition-api')
+    }
+}
+
+project(':mssql-persistence') {
+    dependencies {
+        compile project(':persistence-api')
+    }
+}
+
+project(':desktop-ui') {
+    dependencies {
+        compile project(':core')
+    }
+}
+
+project(':web-ui') {
+    dependencies {
+        compile project(':core')
+    }
+}

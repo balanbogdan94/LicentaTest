@@ -1,0 +1,7 @@
+    
+dependencies {
+    compile "com.bitalino:bitalino-java-sdk:1.1.0"
+    compile "net.sf.bluecove:bluecove:2.1.1"
+    compile 'javax.inject:javax.inject:latest.release'
+    testCompile "junit:junit:4.12"
+}

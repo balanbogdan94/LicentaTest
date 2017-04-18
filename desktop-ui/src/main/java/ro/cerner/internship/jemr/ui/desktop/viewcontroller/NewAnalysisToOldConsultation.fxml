@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.chart.LineChart?>
+<?import javafx.scene.chart.NumberAxis?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ListView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="700.0" prefWidth="1500.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.NewAnalysisToOldConsultationController">
+   <children>
+      <Button fx:id="backButton" layoutX="274.0" layoutY="188.0" mnemonicParsing="false" onAction="#backToOldConsultaions" prefHeight="40.0" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="typeOfAnalissis" layoutX="313.0" layoutY="98.0" prefHeight="30.0" prefWidth="200.0" promptText="Select a type of analysis" AnchorPane.leftAnchor="350.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="216.0" layoutY="101.0" prefHeight="30.0" prefWidth="100.0" text="Type of analysis:" AnchorPane.leftAnchor="250.0" AnchorPane.topAnchor="10.0" />
+      <Label layoutX="1022.0" layoutY="105.0" prefHeight="30.0" prefWidth="100.0" text="Frequency: " AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="frequncyComboBox" layoutX="1092.0" layoutY="100.0" prefHeight="30.0" prefWidth="200.0" promptText="Select a frequency" AnchorPane.topAnchor="10.0" />
+      <Label alignment="CENTER" layoutX="71.0" layoutY="94.0" prefHeight="30.0" prefWidth="190.0" text="Analysis" AnchorPane.leftAnchor="100.0" AnchorPane.topAnchor="10.0">
+         <font>
+            <Font name="System Bold Italic" size="21.0" />
+         </font>
+      </Label>
+      <Button fx:id="startButton" layoutX="42.0" layoutY="673.0" mnemonicParsing="false" onAction="#startButton" prefHeight="40.0" prefWidth="160.0" text="Start" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="15.0" />
+      <Label layoutX="616.0" layoutY="104.0" prefHeight="30.0" prefWidth="100.0" text="Channel:" AnchorPane.topAnchor="10.0" />
+      <ComboBox fx:id="chanelComboBox" layoutX="675.0" layoutY="100.0" prefHeight="30.0" prefWidth="200.0" promptText="Select a channel" AnchorPane.topAnchor="10.0" />
+      <Button fx:id="stopButton" layoutX="160.0" layoutY="673.0" mnemonicParsing="false" onAction="#stopButton" prefHeight="40.0" prefWidth="160.0" text="Stop" AnchorPane.bottomAnchor="15.0" AnchorPane.leftAnchor="190.0" />
+      <Button fx:id="saveButton" layoutX="1240.0" layoutY="673.0" mnemonicParsing="false" onAction="#saveDataFromChart" prefHeight="40.0" prefWidth="160.0" text="Save" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="190.0" />
+      <Button fx:id="dropButton" layoutX="1364.0" layoutY="673.0" mnemonicParsing="false" onAction="#dropDataFromChart" prefHeight="40.0" prefWidth="160.0" text="Drop" AnchorPane.bottomAnchor="15.0" AnchorPane.rightAnchor="15.0" />
+      <ListView fx:id="doneAnalysis" layoutX="1352.0" layoutY="155.0" prefHeight="480.0" prefWidth="140.0" AnchorPane.bottomAnchor="70.0" AnchorPane.rightAnchor="15.0" AnchorPane.topAnchor="115.0" />
+      <LineChart fx:id="lineChart" layoutX="10.0" layoutY="143.0" prefHeight="523.0" prefWidth="1443.0" AnchorPane.bottomAnchor="50.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="212.0" AnchorPane.topAnchor="100.0">
+         <xAxis>
+            <NumberAxis autoRanging="false" side="BOTTOM" tickUnit="25.0" fx:id="xAxis" />
+         </xAxis>
+         <yAxis>
+            <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" tickUnit="25.0" />
+         </yAxis>
+      </LineChart>
+   </children>
+</AnchorPane>

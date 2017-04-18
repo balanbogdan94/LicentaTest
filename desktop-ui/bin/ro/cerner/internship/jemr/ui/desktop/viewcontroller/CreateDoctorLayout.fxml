@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.geometry.Insets?>
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ComboBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.Tab?>
+<?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<VBox prefHeight="525.0" prefWidth="400.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.CreateDoctorLayoutController">
+   <children>
+      <GridPane prefHeight="54.0" prefWidth="400.0" style="-fx-background-color: #2795EA;">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label prefHeight="30.0" prefWidth="200.0" text="Add new doctor" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="20.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="" textFill="WHITE" GridPane.columnIndex="1">
+               <font>
+                  <Font size="32.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets right="20.0" />
+               </GridPane.margin>
+            </Label>
+         </children>
+      </GridPane>
+      <TabPane prefHeight="458.0" prefWidth="400.0" tabClosingPolicy="UNAVAILABLE">
+        <tabs>
+          <Tab text="General *">
+               <content>
+                  <GridPane prefHeight="421.0" prefWidth="400.0">
+                     <columnConstraints>
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                        <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+                     </columnConstraints>
+                     <rowConstraints>
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                        <RowConstraints minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                     </rowConstraints>
+                     <children>
+                        <TextField fx:id="firstName" prefHeight="25.0" prefWidth="200.0" GridPane.columnIndex="1" />
+                        <TextField fx:id="lastName" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
+                        <TextField fx:id="cnp" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="2" />
+                        <TextField fx:id="homeAddress" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="5" />
+                        <TextField fx:id="phoneNumber" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="6" />
+                        <Label text="First Name *" />
+                        <Label text="Last Name *" GridPane.rowIndex="1" />
+                        <Label text="CNP *" GridPane.rowIndex="2" />
+                        <ComboBox fx:id="gender" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="3" />
+                        <Label text="Gender *" GridPane.rowIndex="3" />
+                        <DatePicker fx:id="dateOfBirth" prefHeight="25.0" prefWidth="200.0" promptText="mm/dd/yyyy" GridPane.columnIndex="1" GridPane.rowIndex="4" />
+                        <Label text="Date of Birth *" GridPane.rowIndex="4" />
+                        <Label text="Home address" GridPane.rowIndex="5" />
+                        <Label text="Phone Number" GridPane.rowIndex="6" />
+                        <TextField fx:id="emailAddress" prefWidth="200.0" GridPane.columnIndex="1" GridPane.rowIndex="7" />
+                        <Label text="E-mail Address" GridPane.rowIndex="7" />
+                        <Label text="Specialty *" GridPane.rowIndex="8" />
+                        <TextField fx:id="speciality" prefHeight="25.0" prefWidth="200.0" promptText="Speciality" GridPane.columnIndex="1" GridPane.rowIndex="8" />
+                        <Button mnemonicParsing="false" onAction="#createDoctor" prefHeight="22.0" prefWidth="80.0" style="-fx-background-color: #2795EA;" text="Create" textFill="WHITE" GridPane.columnIndex="1" GridPane.rowIndex="12">
+                           <font>
+                              <Font name="Arial" size="18.0" />
+                           </font>
+                        </Button>
+                        <TextField fx:id="username" prefWidth="200.0" promptText="User Name" GridPane.columnIndex="1" GridPane.rowIndex="9" />
+                        <PasswordField fx:id="password" prefHeight="25.0" prefWidth="200.0" promptText="Password" GridPane.columnIndex="1" GridPane.rowIndex="10" />
+                        <Label text="Username *" GridPane.rowIndex="9" />
+                        <Label text="Password *" GridPane.rowIndex="10" />
+                        <PasswordField fx:id="repeatPassword" prefHeight="25.0" prefWidth="200.0" promptText="Repeat password" GridPane.columnIndex="1" GridPane.rowIndex="11" />
+                        <Label text="Repeat password *" GridPane.rowIndex="11" />
+                     </children>
+                     <padding>
+                        <Insets left="20.0" right="10.0" />
+                     </padding>
+                  </GridPane>
+               </content>
+            </Tab>
+        </tabs>
+      </TabPane>
+   </children>
+</VBox>

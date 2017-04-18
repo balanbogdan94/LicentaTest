@@ -1,0 +1,3 @@
+rootProject.name = 'jEMR'
+
+include 'core', 'data-acquisition-api', 'bitalino-data-acquisition','arduino-data-acquisition', 'persistence-api', 'mssql-persistence', 'desktop-ui', 'web-ui'

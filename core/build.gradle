@@ -1,0 +1,11 @@
+    
+dependencies {
+    compile 'org.springframework:spring-context:latest.release'
+    compile 'javax.inject:javax.inject:latest.release'
+    
+    testCompile "junit:junit:4.12"
+    
+    runtime 'ro.cerner.internship:mssql-persistence:1.0'
+    runtime "ro.cerner.internship:bitalino-data-acquisition:1.0"
+    runtime "ro.cerner.internship:arduino-data-acquisition:1.0"
+}
