@@ -304,6 +304,7 @@ public class FirstPageController implements Initializable {
 			} else {
 				patient.setCurrentPatient(selectedPatient, currentDoctor);
 				Scene scene = new Scene(root);
+				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				primaryStage.setScene(scene);
 				primaryStage.setMaximized(true);
 				primaryStage.setMinHeight(root.getPrefHeight());

@@ -26,6 +26,8 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
 import javafx.stage.WindowEvent;
@@ -39,28 +41,21 @@ import ro.cerner.internship.jemr.ui.desktop.springwiring.SpringApplicationContex
 
 public class ConsultationController implements Initializable {
 	@FXML
-	private Label firstName;
+	private Label nameOfDoctor;
 	@FXML
-	private Label lastName;
+	private Label patientName;
+	@FXML 
+	private Label patientAge;
 	@FXML
-	private Label firstName1;
-	@FXML
-	private Label lastName1;
-	@FXML
-	private Label cnp;
-	@FXML
-	private Label gender;
-	@FXML
-	private Label dateOfBirth;
-	@FXML
-	private Label phoneNumber;
-	@FXML
-	private Label bloodType;
+	private Label patientBloodType;
 	@FXML
 	private Button viewConsultation;
 	@FXML
 	private Button deleteConsultation;
-
+	@FXML
+	private ImageView femaleSign;
+	@FXML
+	private ImageView maleSign;
 	@FXML
 	private TableView<Examination> tableView = new TableView<>();
 	@FXML
@@ -79,21 +74,19 @@ public class ConsultationController implements Initializable {
 	public void setCurrentPatient(Patient selectedPatient, Doctor currentDoctor) {
 		this.selectedPatient = selectedPatient;
 		this.currentDoctor = currentDoctor;
-		this.firstName.setText(selectedPatient.getFirstName());
-		this.lastName.setText(selectedPatient.getLastName());
-		this.cnp.setText(selectedPatient.getCnp());
-		this.gender.setText(selectedPatient.getGender());
-		this.dateOfBirth.setText(selectedPatient.getDateOfBirth().toString());
-		this.phoneNumber.setText(selectedPatient.getPhoneNumber());
-		this.bloodType.setText(selectedPatient.getBloodType() + " " + selectedPatient.getRH());
-		this.firstName1.setText(currentDoctor.getFirstName());
-		this.lastName1.setText(currentDoctor.getLastName());
+		this.nameOfDoctor.setText(currentDoctor.getFirstName()+" "+currentDoctor.getLastName());
+		this.patientName.setText(selectedPatient.getFirstName()+" "+selectedPatient.getLastName());
+		this.patientAge.setText(selectedPatient.getDateOfBirth().toString());
+		this.patientBloodType.setText(selectedPatient.getBloodType()+" "+selectedPatient.getRH());
+		this.femaleSign.setVisible(selectedPatient.getGender().equals("F"));
+		this.maleSign.setVisible(selectedPatient.getGender().equals("M"));
 		ObservableList<Examination> examinationList = FXCollections
 				.observableArrayList(view.viewListOfExaminations(selectedPatient.getObjectID()));
 		tableView.setItems(examinationList);
 	}
-
-	public void backToDoctorView(ActionEvent event) {
+	
+	@FXML
+	public void backToDoctorView(MouseEvent event) {
 		try {
 			Stage primaryStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
@@ -126,8 +119,9 @@ public class ConsultationController implements Initializable {
 					}
 				}
 			});
-			primaryStage.show();
 			((Node) event.getSource()).getScene().getWindow().hide();
+			primaryStage.show();
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

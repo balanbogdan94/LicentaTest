@@ -1,116 +1,220 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.ColumnConstraints?>
 <?import javafx.scene.layout.GridPane?>
 <?import javafx.scene.layout.HBox?>
 <?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-
-<GridPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.ConsultationController">
+<GridPane minHeight="676.0" minWidth="1300.0" prefHeight="676.0" prefWidth="1300.0" xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.ConsultationController">
    <columnConstraints>
-      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
       <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="3.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="3.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
-      <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints minHeight="10.0" prefHeight="508.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <HBox prefHeight="100.0" prefWidth="200.0" />
-      <TableView fx:id="tableView" prefHeight="672.0" prefWidth="820.0" GridPane.rowIndex="1">
-        <columns>
-          <TableColumn fx:id="dateColumn" minWidth="1.0" prefWidth="86.00003051757812" resizable="false" text="Date" />
-          <TableColumn fx:id="diagnosticColumn" prefWidth="366.0" resizable="false" text="Diagnostic" />
-            <TableColumn fx:id="commentsColumn" prefWidth="150.0" resizable="false" text="Comments" />
-        </columns>
-      </TableView>
-      <Button mnemonicParsing="false" onAction="#startNewConsultation" prefHeight="40.0" prefWidth="270.0" text="Start new consultation" GridPane.columnIndex="1" GridPane.rowIndex="10" />
-      <Button fx:id="viewConsultation" mnemonicParsing="false" onAction="#viewOldConsultationOnButton" prefHeight="40.0" prefWidth="270.0" text="View consultation" GridPane.columnIndex="1" GridPane.rowIndex="11" />
-      <Button fx:id="deleteConsultation" mnemonicParsing="false" onAction="#deleteSelectedExamination" prefHeight="40.0" prefWidth="270.0" text="Delete consultation" GridPane.columnIndex="1" GridPane.rowIndex="12" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Patient Info" textAlignment="CENTER" wrapText="true" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="First Name: " GridPane.columnIndex="1" GridPane.rowIndex="2" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Last Name: " GridPane.columnIndex="1" GridPane.rowIndex="3" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="CNP: " GridPane.columnIndex="1" GridPane.rowIndex="4" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Gender: " GridPane.columnIndex="1" GridPane.rowIndex="5" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Date of Birth: " GridPane.columnIndex="1" GridPane.rowIndex="6" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Phone number: " GridPane.columnIndex="1" GridPane.rowIndex="7" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Blood Type: " GridPane.columnIndex="1" GridPane.rowIndex="8" />
-      <Label fx:id="firstName" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="2">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="lastName" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="3">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="cnp" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="4">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="gender" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="5">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="dateOfBirth" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="6">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="phoneNumber" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="7">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="bloodType" alignment="CENTER" prefHeight="40.0" prefWidth="180.0" text="Label" textFill="RED" GridPane.columnIndex="1" GridPane.rowIndex="8">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Doctor" GridPane.columnIndex="1" GridPane.rowIndex="15" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="First Name: " GridPane.columnIndex="1" GridPane.rowIndex="16" />
-      <Label alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Last Name: " GridPane.columnIndex="1" GridPane.rowIndex="17" />
-      <Label fx:id="firstName1" alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="17">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="lastName1" alignment="CENTER" prefHeight="40.0" prefWidth="150.0" text="Label" GridPane.columnIndex="1" GridPane.rowIndex="16">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="80.0" text="Log out" GridPane.columnIndex="1" GridPane.rowIndex="18" />
-      <Button mnemonicParsing="false" onAction="#backToDoctorView" prefHeight="40.0" prefWidth="80.0" text="Back" />
-      <Separator prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="1" />
-      <Separator prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="9" />
-      <Separator prefWidth="300.0" GridPane.columnIndex="1" GridPane.rowIndex="14" />
-      <Button mnemonicParsing="false" onAction="#compareConsultations" prefHeight="40.0" prefWidth="270.0" text="Compare" GridPane.columnIndex="1" GridPane.rowIndex="13" />
+      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" styleClass="logInBackground1" stylesheets="@application.css">
+         <children>
+            <Label fx:id="nameOfDoctor" alignment="CENTER" contentDisplay="CENTER" prefWidth="123.0" text="Label" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold Italic" size="16.0" />
+               </font>
+            </Label>
+            <AnchorPane prefHeight="60.0" prefWidth="1240.0">
+               <children>
+                  <MenuButton alignment="CENTER_RIGHT" layoutX="1039.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: none;" text="" textFill="WHITE">
+                    <items>
+                      <MenuItem mnemonicParsing="false" text="Action 1" />
+                      <MenuItem mnemonicParsing="false">
+                           <graphic>
+                              <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: none;" text="Log out">
+                                 <font>
+                                    <Font name="Arial Bold" size="15.0" />
+                                 </font>
+                              </Button>
+                           </graphic>
+                        </MenuItem>
+                    </items>
+                     <font>
+                        <Font size="23.0" />
+                     </font>
+                  </MenuButton>
+               </children>
+            </AnchorPane>
+         </children></HBox>
+      <GridPane minHeight="550.0" prefHeight="550.0" prefWidth="1300.0" GridPane.rowIndex="2">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox>
+               <children>
+                  <AnchorPane>
+                     <children>
+                        <StackPane>
+                           <children>
+                              <TextField prefHeight="25.0" prefWidth="222.0" promptText="Diagnostic" />
+                              <Button mnemonicParsing="false" prefHeight="14.0" prefWidth="39.0" style="-fx-background-color: #2795EA;" text="" textFill="WHITE" StackPane.alignment="CENTER_RIGHT" />
+                           </children>
+                        </StackPane>
+                     </children>
+                  </AnchorPane>
+                  <TableView fx:id="tableView" prefHeight="495.0" prefWidth="658.0">
+                    <columns>
+                      <TableColumn fx:id="dateColumn" minWidth="1.0" prefWidth="86.00003051757812" resizable="false" text="Date" />
+                      <TableColumn fx:id="diagnosticColumn" prefWidth="366.0" resizable="false" text="Diagnostic" />
+                        <TableColumn fx:id="commentsColumn" prefWidth="150.0" resizable="false" text="Comments" />
+                    </columns>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+            <VBox prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1">
+               <children>
+                  <GridPane prefHeight="200.0" prefWidth="361.0" style="-fx-border-color: #dbdbdb; -fx-border-width: 3;">
+                    <columnConstraints>
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                    </columnConstraints>
+                    <rowConstraints>
+                      <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+                    </rowConstraints>
+                     <children>
+                        <ImageView fx:id="femaleSign" fitHeight="169.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+                           <image>
+                              <Image url="file:/E:/Proiecte/Licenta2017/jEMR/desktop-ui/src/main/java/ro/cerner/internship/jemr/ui/desktop/viewcontroller/womanSign.png" />
+                           </image>
+                        </ImageView>
+                        <ImageView fx:id="maleSign" fitHeight="169.0" fitWidth="72.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+                           <image>
+                              <Image url="file:/E:/Proiecte/Licenta2017/jEMR/desktop-ui/src/main/java/ro/cerner/internship/jemr/ui/desktop/viewcontroller/manSign1.png" />
+                           </image>
+                        </ImageView>
+                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                           <children>
+                              <HBox prefHeight="21.0" prefWidth="137.0">
+                                 <children>
+                                    <Label text="Name: ">
+                                       <font>
+                                          <Font name="Arial Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="patientName" text="Label" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="30.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox>
+                                 <children>
+                                    <Label text="Age: ">
+                                       <font>
+                                          <Font name="Arial Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="patientAge" text="Label" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label text="Blood Type: " textFill="RED">
+                                       <font>
+                                          <Font name="Arial Bold" size="14.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="patientBloodType" text="Label" />
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                           </children>
+                           <padding>
+                              <Insets left="40.0" top="20.0" />
+                           </padding>
+                        </VBox>
+                        <HBox prefHeight="100.0" prefWidth="225.0" />
+                     </children>
+                     <VBox.margin>
+                        <Insets top="35.0" />
+                     </VBox.margin>
+                  </GridPane>
+               </children>
+            </VBox>
+         </children>
+         <padding>
+            <Insets bottom="10.0" left="20.0" top="10.0" />
+         </padding>
+      </GridPane>
+      <HBox alignment="CENTER_LEFT" prefHeight="40.0" prefWidth="200.0" style="-fx-background-color: #dbdbdb;" GridPane.rowIndex="1">
+         <children>
+            <Label onMouseClicked="#backToDoctorView" prefHeight="36.0" prefWidth="167.0" text="Back" textFill="#2795ea">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <HBox.margin>
+                  <Insets left="10.0" />
+               </HBox.margin>
+            </Label>
+            <HBox alignment="CENTER" prefHeight="40.0" prefWidth="1151.0">
+               <children>
+                  <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="21.0" prefWidth="1262.0" text="Consultations">
+                     <font>
+                        <Font name="Arial Bold" size="18.0" />
+                     </font>
+                     <padding>
+                        <Insets right="150.0" />
+                     </padding>
+                  </Label>
+               </children>
+            </HBox>
+         </children>
+      </HBox>
+      <HBox alignment="CENTER" maxHeight="40.0" prefHeight="40.0" prefWidth="1300.0" style="-fx-background-color: #dbdbdb;" GridPane.rowIndex="3">
+         <children>
+            <Button mnemonicParsing="false" onAction="#startNewConsultation" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="New" textFill="WHITE">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="viewConsultation" mnemonicParsing="false" onAction="#viewOldConsultationOnButton" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="View " textFill="WHITE">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="deleteConsultation" cancelButton="true" mnemonicParsing="false" onAction="#deleteSelectedExamination" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Delete " textFill="WHITE">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Button>
+            <Button mnemonicParsing="false" onAction="#compareConsultations" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Compare" textFill="WHITE" />
+         </children>
+      </HBox>
    </children>
 </GridPane>
