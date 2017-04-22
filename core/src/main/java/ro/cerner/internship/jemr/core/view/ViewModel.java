@@ -1,5 +1,9 @@
 package ro.cerner.internship.jemr.core.view;
 
+import java.time.LocalDate;
+import java.time.Period;
+import java.time.Year;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -12,13 +16,10 @@ import ro.cerner.internship.jemr.core.bitdata.BitalinoData;
 import ro.cerner.internship.jemr.persistence.api.config.ConfigRepository;
 import ro.cerner.internship.jemr.persistence.api.doctorRepo.DoctorRepository;
 import ro.cerner.internship.jemr.persistence.api.entity.Analysis;
-import ro.cerner.internship.jemr.persistence.api.entity.Channel;
 import ro.cerner.internship.jemr.persistence.api.entity.Doctor;
 import ro.cerner.internship.jemr.persistence.api.entity.Examination;
-import ro.cerner.internship.jemr.persistence.api.entity.Frequency;
 import ro.cerner.internship.jemr.persistence.api.entity.Patient;
 import ro.cerner.internship.jemr.persistence.api.entity.Sensor;
-import ro.cerner.internship.jemr.persistence.api.entity.SensorType;
 import ro.cerner.internship.jemr.persistence.api.patientRepo.PatientRepository;
 
 @Named("ViewModel")
@@ -35,6 +36,8 @@ public class ViewModel {
 	@Inject
 	@Named("ConfigManage")
 	ConfigRepository view;
+	
+	private List<Examination> examinationList;
 
 	public List<Patient> viewListOfPacients(int doctorID) {
 		List<Patient> patientList = viewPatient.displayPacients(doctorID);
@@ -51,14 +54,9 @@ public class ViewModel {
 		return doctorList;
 	}
 
-	public List<Frequency> viewListOfFrequency() {
-		List<Frequency> frequencyList = view.displayFrequency();
-		return frequencyList;
-	}
-
-
+	
 	public List<Examination> viewListOfExaminations(int patientId) {
-		List<Examination> examinationList = viewPatient.displayExamination(patientId);
+		 examinationList= viewPatient.displayExamination(patientId);
 		return examinationList;
 	}
 	
@@ -72,11 +70,7 @@ public class ViewModel {
 		return analysisList;
 	}
 	
-	public List<Channel> viewListOfChannels(){
-		
-		
-		return view.displayChannel();
-	}
+
 
 	public List<Double> viewSensorData(int objectId, String sensorName, int channelNumber) {
 		List<Short> rawData= viewPatient.getSensorData(objectId);
@@ -121,6 +115,31 @@ public class ViewModel {
 		
 		}
 		return sexRatio;
+	}
+
+	public int patientAge(LocalDate patientDOB) {
+
+		return Period.between(patientDOB, LocalDate.now()).getYears();
+	}
+
+	public ArrayList<Examination> searchDiagnostic(String searchText) {
+		if(searchText.replaceAll("\\s+","").equalsIgnoreCase(""))
+			return new ArrayList<>(examinationList);
+		ArrayList<Examination> examinationListAux=new ArrayList<>();
+		for(Examination examination:examinationList)
+		{
+			if(examination != null && examination.getDiagnostic()!=null)
+			{
+				if(examination.getDiagnostic().contains(searchText))
+					examinationListAux.add(examination);
+			}
+		}
+		return examinationListAux;
+	}
+	
+	public List<Sensor> viewListOfSensors()
+	{
+		return view.displaySensor();
 	}
 
 }

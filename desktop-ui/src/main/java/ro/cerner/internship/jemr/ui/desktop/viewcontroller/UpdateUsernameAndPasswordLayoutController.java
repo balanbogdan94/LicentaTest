@@ -109,34 +109,7 @@ public class UpdateUsernameAndPasswordLayoutController implements Initializable 
 							alert.showAndWait();
 						}
 					}
-				} else if (currentUser.getType() == 3) {
-
-					UpdateModel updateModel = SpringApplicationContext.instance().getBean("UpdateModel",
-							UpdateModel.class);
-					if (currentPatient.getUserName().equalsIgnoreCase(userNameInput.getText())) {
-						currentPatient.setUserPassword(passwordInput.getText());
-						updateModel.updateUser(currentPatient);
-						alert.setContentText("User Updated Succesfully!");
-						alert.showAndWait();
-						backToPacientView();
-					} else {
-						currentPatient.setUserName(userNameInput.getText());
-						currentPatient.setUserPassword(passwordInput.getText());
-						CheckuserName checkUsername = SpringApplicationContext.instance().getBean("CheckuserName",
-								CheckuserName.class);
-						if (checkUsername.checkCurrentUsername(userNameInput.getText()) != 1) {
-							updateModel.updateUser(currentPatient);
-							alert.setContentText("User Updated Succesfully!");
-							alert.showAndWait();
-							backToPacientView();
-							((Node) (((EventObject) event).getSource())).getScene().getWindow().hide();
-						} else if (checkUsername.checkCurrentUsername(userNameInput.getText()) == 1) {
-							alert.setContentText(
-									"This username already exists in our database! Please try another one.");
-							alert.showAndWait();
-						}
-					}
-				}
+				} 
 			}
 
 		} catch (Exception e) {
@@ -144,45 +117,7 @@ public class UpdateUsernameAndPasswordLayoutController implements Initializable 
 		}
 	}
 
-	public void backToPacientView() {
-		try {
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/PacientWindow.fxml")
-							.openStream());
-			PacientWindowController patientView = (PacientWindowController) loader.getController();
-			patientView.setCurrentPatient(currentPatient);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
 
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						Platform.exit();
-					}
-				}
-			});
-			primaryStage.show();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 
 	public void backToDoctorView() {
 		try {
@@ -224,13 +159,10 @@ public class UpdateUsernameAndPasswordLayoutController implements Initializable 
 	}
 
 	public void cancel(ActionEvent event) {
-		if (currentUser.getType() == 2) {
+		if (currentUser.getType() == 2) 
 			backToDoctorView();
-		} else if (currentUser.getType() == 3) {
-			backToPacientView();
-		}
+		
 		((Node) (event.getSource())).getScene().getWindow().hide();
-
 	}
 
 }

@@ -33,6 +33,7 @@ import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.CheckBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.Slider;
 import javafx.scene.control.TableColumn;
@@ -41,7 +42,9 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.ImageView;
 import javafx.scene.image.WritableImage;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -54,6 +57,7 @@ import ro.cerner.internship.jemr.persistence.api.entity.Analysis;
 import ro.cerner.internship.jemr.persistence.api.entity.Doctor;
 import ro.cerner.internship.jemr.persistence.api.entity.Examination;
 import ro.cerner.internship.jemr.persistence.api.entity.Patient;
+import ro.cerner.internship.jemr.persistence.api.entity.Sensor;
 import ro.cerner.internship.jemr.ui.desktop.springwiring.SpringApplicationContext;
 
 public class ViewOldConsultationController implements Initializable {
@@ -61,11 +65,19 @@ public class ViewOldConsultationController implements Initializable {
 	@FXML
 	private Label completedDate;
 	@FXML
-	private Label pacientInfo;
+	private Label patientName;
+	@FXML
+	private Label patientAge;
+	@FXML
+	private Label patientDOB;
+	@FXML
+	private Label patientBloodType;
+	@FXML
+	private Label patientRH;
 	@FXML
 	private TableView<Analysis> examinationTable;
 	@FXML
-	private TableColumn<Analysis, String> sensorType = new TableColumn<Analysis, String>();
+	private TableColumn<Analysis, Sensor> sensorType = new TableColumn<Analysis, Sensor>();
 	@FXML
 	private TableColumn<Analysis, Integer> frequency = new TableColumn<Analysis, Integer>();
 	@FXML
@@ -85,13 +97,19 @@ public class ViewOldConsultationController implements Initializable {
 	@FXML
 	private Button btnImage;
 	@FXML
-	private Label beatsPerMinute;
-	@FXML
 	private LineChart<Number, Number> analysisChart;
+	@FXML
+	private ImageView femaleSign;
+	@FXML
+	private ImageView maleSign;
 	@FXML
 	private NumberAxis xAxis;
 	@FXML
 	private NumberAxis yAxis;
+	@FXML
+	private CheckBox editCheckBox;
+	@FXML
+	private Label doctorName;
 	private int currentPositionOnXAxis;
 	private int distanceOnXAxis;
 	private Series<Number, Number> series;
@@ -99,11 +117,6 @@ public class ViewOldConsultationController implements Initializable {
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	@FXML
 	private Slider sliderForChart;
-	@FXML
-	private Button backButton;
-	@FXML
-	private Button forwardButton;
-
 	int i = 0;
 
 	Examination currentExamination;
@@ -113,11 +126,10 @@ public class ViewOldConsultationController implements Initializable {
 	UpdateModel updateModel = SpringApplicationContext.instance().getBean("UpdateModel", UpdateModel.class);
 	ObservableList<Analysis> analysisList;
 
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		isAllDataFromSeriesVisible(false);
-		backButton.setVisible(false);
-		forwardButton.setVisible(false);
 		sliderForChart.setVisible(false);
 		saveGraph.setDisable(true);
 		diagnostic.setTextFormatter(
@@ -126,20 +138,14 @@ public class ViewOldConsultationController implements Initializable {
 				new TextFormatter<String>(change -> change.getControlNewText().length() <= maxChar ? change : null));
 		xAxis.setAutoRanging(false);
 		sliderForChart.setValue(0);
-		DoubleBinding bind = examinationTable.widthProperty().divide(4);
 
-		sensorType.prefWidthProperty().bind(bind);
-		frequency.prefWidthProperty().bind(bind);
-		startDateColumn.prefWidthProperty().bind(bind);
-		stopDateColumn.prefWidthProperty().bind(bind);
 
-		sensorType.setCellValueFactory(new PropertyValueFactory<Analysis, String>("sensorName"));
+		sensorType.setCellValueFactory(new PropertyValueFactory<Analysis, Sensor>("sensor"));
 		frequency.setCellValueFactory(new PropertyValueFactory<Analysis, Integer>("frequency"));
 		startDateColumn.setCellValueFactory(new PropertyValueFactory<Analysis, String>("startDateFormated"));
 		stopDateColumn.setCellValueFactory(new PropertyValueFactory<Analysis, String>("stopDateFormated"));
 		sliderForChart.setVisible(false);
 		analysisChart.setCreateSymbols(false);
-		beatsPerMinute.setVisible(false);
 		examinationTable.setRowFactory(tv -> {
 			TableRow<Analysis> row = new TableRow<>();
 			row.setOnMouseClicked(event -> {
@@ -156,11 +162,17 @@ public class ViewOldConsultationController implements Initializable {
 		if (currentExamination != null) {
 			this.patient = currentPatient;
 			this.doctor = doctor;
+			this.patientName.setText(patient.getFirstName()+" "+patient.getLastName());
+			this.patientDOB.setText(patient.getDateOfBirth().toString());
+			this.patientAge.setText(String.valueOf(view.patientAge(patient.getDateOfBirth())));
+			this.patientBloodType.setText(patient.getBloodType());
+			this.patientRH.setText(patient.getRH());
 			this.completedDate.setText(selectedExamination.getExaminationDate().format(formatter).toString());
-			this.pacientInfo.setText(currentPatient.getFirstName() + " " + currentPatient.getLastName() + " "
-					+ currentPatient.getBloodType() + " " + currentPatient.getRH());
 			this.diagnostic.setText(selectedExamination.getDiagnostic());
 			this.comments.setText(selectedExamination.getComments());
+			this.femaleSign.setVisible(patient.getGender().equals("F"));
+			this.maleSign.setVisible(patient.getGender().equals("M"));
+			this.doctorName.setText(doctor.getFirstName()+" "+doctor.getLastName());
 			ObservableList<Analysis> analysisList = FXCollections
 					.observableArrayList(view.viewListOfAnalysis(selectedExamination.getObjectID()));
 			examinationTable.setItems(analysisList);
@@ -188,7 +200,7 @@ public class ViewOldConsultationController implements Initializable {
 			e1.printStackTrace();
 		}
 		//ViewOldConsultationController pageController = (ViewOldConsultationController) loader.getController();
-		xAxis.setUpperBound(series.getData().size()/examinationTable.getSelectionModel().getSelectedItem().getFrequency());
+		xAxis.setUpperBound(series.getData().size()/examinationTable.getSelectionModel().getSelectedItem().getSensor().getFrequency());
 		xAxis.setLowerBound(0);
 		xAxis.setTickLabelsVisible(false);
 		WritableImage image = analysisChart.snapshot(new SnapshotParameters(), null);
@@ -198,7 +210,7 @@ public class ViewOldConsultationController implements Initializable {
 
 		DateTimeFormatter saveFormatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH~mm");
 		FileChooser fileChooser = new FileChooser();
-		fileChooser.setInitialFileName(patient.getFirstName()+"_"+patient.getLastName()+"_"+currentExamination.getExaminationDate().format(saveFormatter)+"_"+examinationTable.getSelectionModel().getSelectedItem().getSensorName());
+		fileChooser.setInitialFileName(patient.getFirstName()+"_"+patient.getLastName()+"_"+currentExamination.getExaminationDate().format(saveFormatter)+"_"+examinationTable.getSelectionModel().getSelectedItem().getSensor().getSensorName());
 		FileChooser.ExtensionFilter extFilter = new FileChooser.ExtensionFilter("PNG files (*.png)", "*.png");
 		fileChooser.getExtensionFilters().add(extFilter);
 		fileChooser.setTitle("Open Resource File");
@@ -213,48 +225,16 @@ public class ViewOldConsultationController implements Initializable {
 		}
 	}
 
-	public void exit(ActionEvent event) {
+	public void exit(MouseEvent event) {
 		try {
-			for (Series<Number, Number> series : analysisChart.getData()) {
-				series.getData().clear();
-			}
-			System.gc();
-			analysisChart.getData().clear();
-			Stage primaryStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(
+			Pane root = loader.load(
 					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
 							.openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			ConsultationController pageController = (ConsultationController) loader.getController();
 			pageController.setCurrentPatient(patient, doctor);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						Platform.exit();
-					}
-				}
-			});
-			primaryStage.show();
-			((Node) event.getSource()).getScene().getWindow().hide();
-
+			analysisChart.getScene().setRoot(root);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -281,25 +261,23 @@ public class ViewOldConsultationController implements Initializable {
 		} else {
 			isAllDataFromSeriesVisible(true);
 			saveGraph.setDisable(false);
-			distanceOnXAxis = getDistance(examinationTable.getSelectionModel().getSelectedItem().getFrequency());
-			series.setName(examinationTable.getSelectionModel().getSelectedItem().getSensorName());
+			distanceOnXAxis = getDistance(examinationTable.getSelectionModel().getSelectedItem().getSensor().getFrequency());
+			series.setName(examinationTable.getSelectionModel().getSelectedItem().getSensor().getSensorName());
 			int objectId = examinationTable.getSelectionModel().getSelectedItem().getObjectId();
-			String sensorName = examinationTable.getSelectionModel().getSelectedItem().getSensorName();
+			String sensorName = examinationTable.getSelectionModel().getSelectedItem().getSensor().getSensorName();
 			rawData= view.viewSensorData(objectId, sensorName,
-					examinationTable.getSelectionModel().getSelectedItem().getChannelNumber());
+					examinationTable.getSelectionModel().getSelectedItem().getSensor().getChannel());
 			for (int i = 0; i < rawData.size(); i++) {
-				series.getData().add(new Data<Number, Number>((double)i/examinationTable.getSelectionModel().getSelectedItem().getFrequency(), rawData.get(i)));
+				series.getData().add(new Data<Number, Number>((double)i/examinationTable.getSelectionModel().getSelectedItem().getSensor().getFrequency(), rawData.get(i)));
 			}
 			analysisChart.getData().add(series);
 			currentPositionOnXAxis = 0;
 			xAxis.setUpperBound(currentPositionOnXAxis + distanceOnXAxis);
 			xAxis.setLowerBound(currentPositionOnXAxis);
 			xAxis.setTickUnit(distanceOnXAxis/4);
-			backButton.setVisible(true);
-			forwardButton.setVisible(true);
 			sliderForChart.setVisible(true);
 			sliderForChart.setMin(0);
-			sliderForChart.setMax(series.getData().size()/examinationTable.getSelectionModel().getSelectedItem().getFrequency() - distanceOnXAxis + 2);
+			sliderForChart.setMax(series.getData().size()/examinationTable.getSelectionModel().getSelectedItem().getSensor().getFrequency() - distanceOnXAxis + 2);
 			sliderForChart.setValue(0);
 			sliderForChart.setVisible(true);
 			sliderForChart.valueProperty().addListener(new InvalidationListener() {
@@ -317,23 +295,15 @@ public class ViewOldConsultationController implements Initializable {
 
 		BitalinoData bitData = new BitalinoData();
 		BitalinoDataBounds bounds = bitData
-				.calculateBounds(examinationTable.getSelectionModel().getSelectedItem().getSensorName());
+				.calculateBounds(examinationTable.getSelectionModel().getSelectedItem().getSensor().getSensorName());
 		yAxis.setLowerBound(bounds.getyLowerBound());
 		yAxis.setUpperBound(bounds.getyUpperBound());
 		yAxis.setTickUnit(BitalinoData.calculateTickUnit(yAxis.getUpperBound(), yAxis.getLowerBound()));
 		xAxis.setTickUnit(BitalinoData.calculateTickUnit(xAxis.getUpperBound(), xAxis.getLowerBound()));
-		
-		if(examinationTable.getSelectionModel().getSelectedItem().getSensorName().equalsIgnoreCase("ECG") || examinationTable.getSelectionModel().getSelectedItem().getSensorName().equalsIgnoreCase("PLS"))
-		{
-			
-			beatsPerMinute.setText("BPM: "+Double.toString(BitalinoData.calculateBPM(rawData,((double)rawData.size()/examinationTable.getSelectionModel().getSelectedItem().getFrequency()))));			
-			beatsPerMinute.setVisible(true);
-		}
 	}
 
 	@FXML
 	public void saveChanges(ActionEvent event) {
-		try {
 			currentExamination.setComments(comments.getText());
 			currentExamination.setDiagnostic(diagnostic.getText());
 			updateModel.updateExamination(currentExamination);
@@ -341,39 +311,7 @@ public class ViewOldConsultationController implements Initializable {
 			alert.setTitle("Information Dialog");
 			alert.setHeaderText(null);
 			alert.setContentText("Examination Updated Succesfully!");
-			alert.showAndWait();
-			// ((Node) (event.getSource())).getScene().getWindow().hide();
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
-							.openStream());
-			ConsultationController pageController = (ConsultationController) loader.getController();
-			pageController.setCurrentPatient(patient, doctor);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	@FXML
-	private void goForward(ActionEvent e) {
-		sliderForChart.setValue(sliderForChart.getValue() + 5);
-		xAxis.setUpperBound(sliderForChart.getValue() + distanceOnXAxis);
-		xAxis.setLowerBound(sliderForChart.getValue());
-
-	}
-
-	@FXML
-	private void goBack(ActionEvent e) {
-		sliderForChart.setValue(sliderForChart.getValue() - 5);
-		xAxis.setUpperBound(sliderForChart.getValue() + distanceOnXAxis);
-		xAxis.setLowerBound(sliderForChart.getValue());
+			alert.showAndWait();		
 	}
 
 	private int getDistance(int freq) {
@@ -383,56 +321,13 @@ public class ViewOldConsultationController implements Initializable {
 		return 10;
 	}
 
-	public void addNewAnalysisToOldConsultation(ActionEvent event) {
-
-		try {
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(getClass()
-					.getResource(
-							"/ro/cerner/internship/jemr/ui/desktop/viewcontroller/NewAnalysisToOldConsultation.fxml")
-					.openStream());
-			NewAnalysisToOldConsultationController pageController = (NewAnalysisToOldConsultationController) loader
-					.getController();
-			pageController.setCurrentExamination(currentExamination, patient, doctor);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						Platform.exit();
-					}
-				}
-			});
-			primaryStage.show();
-			((Node) event.getSource()).getScene().getWindow().hide();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-	}
 	private void isAllDataFromSeriesVisible(boolean state) {
 		xAxis.setTickLabelsVisible(state);
 		yAxis.setTickLabelsVisible(state);
 		if(state)
 		{
 			xAxis.setLabel(" Time[ms]");
-			yAxis.setLabel(BitalinoData.getUnit(examinationTable.getSelectionModel().getSelectedItem().getSensorName()));
+			yAxis.setLabel(BitalinoData.getUnit(examinationTable.getSelectionModel().getSelectedItem().getSensor().getSensorName()));
 			analysisChart.setLegendVisible(true);
 		}
 		else
@@ -442,5 +337,33 @@ public class ViewOldConsultationController implements Initializable {
 			analysisChart.setLegendVisible(false);
 		}
 	}
+	
+	public void logOut(ActionEvent event) {
+		try {
+			
+			FXMLLoader loader = new FXMLLoader();
+			Pane root = loader.load(
+					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml")
+					.openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			analysisChart.getScene().setRoot(root);
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
 
+	
+	public void editChecked(ActionEvent e)
+	{
+		if(editCheckBox.isSelected())
+		{
+			diagnostic.setDisable(false);
+			comments.setDisable(false);
+		}
+		else
+		{
+			diagnostic.setDisable(true);
+			comments.setDisable(true);
+		}
+	}
 }

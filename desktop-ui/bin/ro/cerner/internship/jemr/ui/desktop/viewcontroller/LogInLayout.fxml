@@ -73,7 +73,7 @@
                         <Font name="Arial" size="15.0" />
                      </font>
                   </Label>
-                  <Button defaultButton="true" mnemonicParsing="false" onAction="#logInOnClick" prefHeight="39.0" prefWidth="111.0" style="-fx-border-color: White;" text="Log In" textFill="WHITE">
+                  <Button defaultButton="true" mnemonicParsing="false" onAction="#logInPerformed" prefHeight="39.0" prefWidth="111.0" style="-fx-border-color: White;" text="Log In" textFill="WHITE">
                      <font>
                         <Font name="Arial Bold" size="15.0" />
                      </font>

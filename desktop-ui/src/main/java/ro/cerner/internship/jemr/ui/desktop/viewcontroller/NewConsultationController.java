@@ -51,13 +51,10 @@ import ro.cerner.internship.jemr.core.update.UpdateModel;
 import ro.cerner.internship.jemr.core.view.ViewModel;
 import ro.cerner.internship.jemr.dataacquisition.api.Configuration;
 import ro.cerner.internship.jemr.persistence.api.entity.Analysis;
-import ro.cerner.internship.jemr.persistence.api.entity.Channel;
 import ro.cerner.internship.jemr.persistence.api.entity.Doctor;
 import ro.cerner.internship.jemr.persistence.api.entity.Examination;
-import ro.cerner.internship.jemr.persistence.api.entity.Frequency;
 import ro.cerner.internship.jemr.persistence.api.entity.Patient;
 import ro.cerner.internship.jemr.persistence.api.entity.Sensor;
-import ro.cerner.internship.jemr.persistence.api.entity.SensorType;
 import ro.cerner.internship.jemr.ui.desktop.springwiring.SpringApplicationContext;
 
 public class NewConsultationController implements Initializable {
@@ -80,17 +77,10 @@ public class NewConsultationController implements Initializable {
 	@FXML
 	private Label dateAndTime;
 	@FXML
-	private ComboBox<Frequency> frequncyComboBox;
-	@FXML
-	private ComboBox<SensorType> typeOfAnalissis;
-	@FXML
-	private ComboBox<Channel> chanelComboBox;
-
+	private ComboBox<Sensor> typeOfAnalissis;
 	private Series<Number, Number> series1;
-
 	private int xSeriesData = 0;
 	public ConcurrentLinkedQueue<Number> dataQ = new ConcurrentLinkedQueue<Number>();
-
 	@FXML
 	private NumberAxis xAxis;
 	@FXML
@@ -101,12 +91,6 @@ public class NewConsultationController implements Initializable {
 	private ListView<String> doneAnalysis;
 	@FXML
 	private Button addExaminationButton;
-	@FXML
-	private Label patientName;
-	@FXML
-	private Button print;
-
-	private Frequency frequencyAux;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	private LocalDateTime startDate;
 	private LocalDateTime stopDate;
@@ -116,7 +100,6 @@ public class NewConsultationController implements Initializable {
 			Configuration.class);
 	private DataReader reader;
 	private ViewModel view = SpringApplicationContext.instance().getBean("ViewModel", ViewModel.class);
-	private List<Frequency> freq = new ArrayList<>();
 	private List<Sensor> sensor = new ArrayList<>();
 	private ObservableList<String> analysisMade = FXCollections.observableArrayList();
 	private ArrayList<Short> rawData1 = new ArrayList<>();
@@ -164,40 +147,14 @@ public class NewConsultationController implements Initializable {
 			alert.setContentText("You have added a consultation");
 			alert.showAndWait();
 			try {
-				Stage primaryStage = new Stage();
+				
 				FXMLLoader loader = new FXMLLoader();
-				Pane root;
-				root = loader.load(
+				Pane root=loader.load(
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
 								.openStream());
 				ConsultationController pageController = (ConsultationController) loader.getController();
 				pageController.setCurrentPatient(patient, doctor);
-				Scene scene = new Scene(root);
-				primaryStage.setScene(scene);
-				primaryStage.setMaximized(true);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ev.getSource()).getScene().getWindow().hide();
+				dropButton.getScene().setRoot(root);
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -221,26 +178,25 @@ public class NewConsultationController implements Initializable {
 			rawData1.add((Short) valueStore.remove());
 			series1.getData()
 					.add(new Data<Number, Number>(
-							(double) xSeriesData / Integer.parseInt(frequncyComboBox.getValue().getFrequency()),
+							(double) xSeriesData / typeOfAnalissis.getValue().getFrequency(),
 							BitalinoData.relevantDataValue(rawData1.get(rawData1.size() - 1),
-									typeOfAnalissis.getValue().toString(), chanelComboBox.getValue().getChannelNumber())));
+									typeOfAnalissis.getValue().toString(), typeOfAnalissis.getValue().getChannel())));
 
 			xSeriesData++;
 		}
 
-		if (series1.getData().size() > MAX_DATA_POINTS * Integer.parseInt(frequncyComboBox.getValue().getFrequency())) {
+		if (series1.getData().size() > MAX_DATA_POINTS * typeOfAnalissis.getValue().getFrequency()) {
 			series1.getData().remove(0, series1.getData().size()
-					- MAX_DATA_POINTS * Integer.parseInt(frequncyComboBox.getValue().getFrequency()));
+					- MAX_DATA_POINTS * typeOfAnalissis.getValue().getFrequency());
 
 		}
 		xAxis.setLowerBound(
-				(double) xSeriesData / Integer.parseInt(frequncyComboBox.getValue().getFrequency()) - MAX_DATA_POINTS);
-		xAxis.setUpperBound((double) xSeriesData / Integer.parseInt(frequncyComboBox.getValue().getFrequency()) - 0.1);
+				(double) xSeriesData / typeOfAnalissis.getValue().getFrequency() - MAX_DATA_POINTS);
+		xAxis.setUpperBound((double) xSeriesData / typeOfAnalissis.getValue().getFrequency() - 0.1);
 	}
 
 	private <T> void cancelTheConsultation(T event) {
 		DeleteModel model = SpringApplicationContext.instance().getBean("DeleteModel", DeleteModel.class);
-
 		Alert alert1 = new Alert(AlertType.CONFIRMATION);
 		alert1.setTitle("Confirmation Dialog");
 		alert1.setHeaderText("Confirm action");
@@ -259,40 +215,14 @@ public class NewConsultationController implements Initializable {
 				stopButton(null);
 			}
 			try {
-				Stage primaryStage = new Stage();
+				
 				FXMLLoader loader = new FXMLLoader();
-				Pane root;
-				root = loader.load(
+				Pane root = loader.load(
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
 								.openStream());
 				ConsultationController pageController = (ConsultationController) loader.getController();
+				dateAndTime.getScene().setRoot(root);
 				pageController.setCurrentPatient(patient, doctor);
-				Scene scene = new Scene(root);
-				primaryStage.setScene(scene);
-				primaryStage.setMaximized(true);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ((EventObject) event).getSource()).getScene().getWindow().hide();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -337,11 +267,8 @@ public class NewConsultationController implements Initializable {
 				new TextFormatter<String>(change -> change.getControlNewText().length() <= maxChar ? change : null));
 		newDiagnostic.setTextFormatter(
 				new TextFormatter<String>(change -> change.getControlNewText().length() <= maxChar ? change : null));
-		chanelComboBox.getItems().addAll(view.viewListOfChannels());
 		dateAndTime.setText(LocalDateTime.now().format(formatter).toString());
-		freq = view.viewListOfFrequency();
-		frequncyComboBox.getItems().addAll(freq);
-		typeOfAnalissis.getItems().addAll(SensorType.values());
+		typeOfAnalissis.getItems().addAll(view.viewListOfSensors());
 		xAxis.setAutoRanging(false);
 		yAxis.setAutoRanging(false);
 		lineChart.setAnimated(false);
@@ -357,8 +284,6 @@ public class NewConsultationController implements Initializable {
 	private void isAllDataFromChartVisible(boolean state) {
 		xAxis.setTickLabelsVisible(state);
 		yAxis.setTickLabelsVisible(state);
-		chanelComboBox.setDisable(state);
-		frequncyComboBox.setDisable(state);
 		typeOfAnalissis.setDisable(state);
 
 		if (state) {
@@ -381,10 +306,9 @@ public class NewConsultationController implements Initializable {
 	public void saveDataFromChart(ActionEvent event) {
 		CreateModel model = SpringApplicationContext.instance().getBean("CreateModel", CreateModel.class);
 		Analysis analysis1 = new Analysis(idExamination, ByteConverter.rawDataToBinary(rawData1),
-				1, frequencyAux.getIdObject(), startDate, stopDate,
-				chanelComboBox.getValue().getIdObject());
+				typeOfAnalissis.getValue(), startDate, stopDate);
 		model.addAnalysis(analysis1);
-		analysisMade.add(typeOfAnalissis.getValue().toString() + " " + frequncyComboBox.getValue().getFrequency());
+		analysisMade.add(typeOfAnalissis.getValue().toString());
 
 		doneAnalysis.setItems(analysisMade);
 		saveButton.setDisable(true);
@@ -402,26 +326,20 @@ public class NewConsultationController implements Initializable {
 		patient = selectedPatient;
 		doctor = currentDoctor;
 		idExamination = id;
-		patientName.setText(patient.getFirstName() + " " + patient.getLastName());
+		//TODO
 	}
 
 	public void startButton(ActionEvent e)
 	{
-		if (frequncyComboBox.getValue() != null && typeOfAnalissis.getValue() != null
-				&& chanelComboBox.getValue() != null) {
+		if (typeOfAnalissis.getValue() != null)
+		{
 			isAllDataFromChartVisible(true);
 			startDate = LocalDateTime.now();
 			startDate.format(formatter);
-			frequencyAux = frequncyComboBox.getValue();
 			series1.setName(typeOfAnalissis.getValue().toString());
 			reader = SpringApplicationContext.instance().getBean("DataReader", DataReader.class);
-			int chanel = chanelComboBox.getValue().getChannelNumber();
-			int frequency = Integer.parseInt(frequencyAux.getFrequency());
 			String listNumeSenzori = typeOfAnalissis.getValue().toString();
-			int listaCanale = chanel;
 			configuration.setSensorType(listNumeSenzori);
-			configuration.setFrequency(frequency);
-			configuration.setChannel(listaCanale);
 			reader.setValueStore(valueStore);
 			reader.setConfiguration(configuration);
 			reader.start();

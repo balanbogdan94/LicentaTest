@@ -24,41 +24,56 @@
       <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
    </columnConstraints>
    <rowConstraints>
-      <RowConstraints maxHeight="60.0" minHeight="10.0" prefHeight="60.0" vgrow="SOMETIMES" />
-      <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
       <RowConstraints minHeight="10.0" prefHeight="508.0" vgrow="SOMETIMES" />
       <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
    </rowConstraints>
    <children>
-      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" styleClass="logInBackground1" stylesheets="@application.css">
+      <GridPane styleClass="logInBackground1" stylesheets="@application.css">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
          <children>
-            <Label fx:id="nameOfDoctor" alignment="CENTER" contentDisplay="CENTER" prefWidth="123.0" text="Label" textFill="WHITE">
+            <Label fx:id="nameOfDoctor" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="133.0" text="Label" textFill="WHITE">
                <font>
                   <Font name="Arial Bold Italic" size="16.0" />
                </font>
             </Label>
-            <AnchorPane prefHeight="60.0" prefWidth="1240.0">
-               <children>
-                  <MenuButton alignment="CENTER_RIGHT" layoutX="1039.0" layoutY="6.0" mnemonicParsing="false" prefHeight="50.0" prefWidth="180.0" style="-fx-background-color: none;" text="" textFill="WHITE">
-                    <items>
-                      <MenuItem mnemonicParsing="false" text="Action 1" />
-                      <MenuItem mnemonicParsing="false">
-                           <graphic>
-                              <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: none;" text="Log out">
-                                 <font>
-                                    <Font name="Arial Bold" size="15.0" />
-                                 </font>
-                              </Button>
-                           </graphic>
-                        </MenuItem>
-                    </items>
-                     <font>
-                        <Font size="23.0" />
-                     </font>
-                  </MenuButton>
-               </children>
-            </AnchorPane>
-         </children></HBox>
+            <MenuButton alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="50.0" prefWidth="122.0" style="-fx-background-color: none;" text="" textFill="WHITE" GridPane.columnIndex="1">
+              <items>
+                <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Update account">
+                           <font>
+                              <Font name="Arial Bold" size="16.0" />
+                           </font>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                     </graphic>
+                  </MenuItem>
+                <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: none;" text="Log out">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Button>
+                     </graphic>
+                  </MenuItem>
+              </items>
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </MenuButton>
+         </children>
+      </GridPane>
       <GridPane minHeight="550.0" prefHeight="550.0" prefWidth="1300.0" GridPane.rowIndex="2">
          <columnConstraints>
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
@@ -74,17 +89,17 @@
                      <children>
                         <StackPane>
                            <children>
-                              <TextField prefHeight="25.0" prefWidth="222.0" promptText="Diagnostic" />
-                              <Button mnemonicParsing="false" prefHeight="14.0" prefWidth="39.0" style="-fx-background-color: #2795EA;" text="" textFill="WHITE" StackPane.alignment="CENTER_RIGHT" />
+                              <TextField fx:id="diagnosticSearchBox" prefHeight="25.0" prefWidth="222.0" promptText="Diagnostic" />
+                              <Button defaultButton="true" mnemonicParsing="false" onAction="#searchDiagnostic" prefHeight="14.0" prefWidth="39.0" style="-fx-background-color: #2795EA;" text="" textFill="WHITE" StackPane.alignment="CENTER_RIGHT" />
                            </children>
                         </StackPane>
                      </children>
                   </AnchorPane>
-                  <TableView fx:id="tableView" prefHeight="495.0" prefWidth="658.0">
+                  <TableView fx:id="tableView" fixedCellSize="50.0" prefHeight="495.0" prefWidth="658.0">
                     <columns>
-                      <TableColumn fx:id="dateColumn" minWidth="1.0" prefWidth="86.00003051757812" resizable="false" text="Date" />
-                      <TableColumn fx:id="diagnosticColumn" prefWidth="366.0" resizable="false" text="Diagnostic" />
-                        <TableColumn fx:id="commentsColumn" prefWidth="150.0" resizable="false" text="Comments" />
+                      <TableColumn fx:id="dateColumn" minWidth="1.0" prefWidth="160.0" resizable="false" style="-fx-alignment: CENTER_LEFT;" text="Date" />
+                      <TableColumn fx:id="diagnosticColumn" prefWidth="293.0" resizable="false" style="-fx-alignment: CENTER_LEFT;" text="Diagnostic" />
+                        <TableColumn fx:id="commentsColumn" prefWidth="465.0" resizable="false" style="-fx-alignment: CENTER_LEFT;" text="Comments" />
                     </columns>
                      <VBox.margin>
                         <Insets top="10.0" />
@@ -96,8 +111,8 @@
                <children>
                   <GridPane prefHeight="200.0" prefWidth="361.0" style="-fx-border-color: #dbdbdb; -fx-border-width: 3;">
                     <columnConstraints>
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
-                      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="173.0" minWidth="10.0" prefWidth="94.0" />
+                      <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.0" minWidth="10.0" prefWidth="261.0" />
                     </columnConstraints>
                     <rowConstraints>
                       <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
@@ -113,29 +128,52 @@
                               <Image url="file:/E:/Proiecte/Licenta2017/jEMR/desktop-ui/src/main/java/ro/cerner/internship/jemr/ui/desktop/viewcontroller/manSign1.png" />
                            </image>
                         </ImageView>
-                        <VBox alignment="CENTER" prefHeight="200.0" prefWidth="100.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                        <VBox alignment="CENTER" prefHeight="194.0" prefWidth="218.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
                            <children>
                               <HBox prefHeight="21.0" prefWidth="137.0">
                                  <children>
-                                    <Label text="Name: ">
+                                    <Label prefHeight="32.0" prefWidth="61.0" text="Name: ">
                                        <font>
-                                          <Font name="Arial Bold" size="14.0" />
+                                          <Font name="Arial Bold" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="patientName" text="Label" />
+                                    <Label fx:id="patientName" text="Label">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
                                  </children>
                                  <VBox.margin>
-                                    <Insets top="30.0" />
+                                    <Insets top="10.0" />
                                  </VBox.margin>
                               </HBox>
                               <HBox>
                                  <children>
-                                    <Label text="Age: ">
+                                    <Label prefHeight="27.0" prefWidth="124.0" text="Date Of Birth: ">
                                        <font>
-                                          <Font name="Arial Bold" size="14.0" />
+                                          <Font name="Arial Bold" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="patientAge" text="Label" />
+                                    <Label fx:id="patientDOB" text="Label">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="28.0" prefWidth="241.0">
+                                 <children>
+                                    <Label prefHeight="26.0" prefWidth="45.0" text="Age: ">
+                                       <font>
+                                          <Font name="Arial Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="patientAge" text="Label">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                                  <VBox.margin>
                                     <Insets top="10.0" />
@@ -143,12 +181,32 @@
                               </HBox>
                               <HBox prefHeight="100.0" prefWidth="200.0">
                                  <children>
-                                    <Label text="Blood Type: " textFill="RED">
+                                    <Label prefHeight="27.0" prefWidth="109.0" text="Blood Type: " textFill="RED">
                                        <font>
-                                          <Font name="Arial Bold" size="14.0" />
+                                          <Font name="Arial Bold" size="18.0" />
                                        </font>
                                     </Label>
-                                    <Label fx:id="patientBloodType" text="Label" />
+                                    <Label fx:id="patientBloodType" text="Label">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font></Label>
+                                 </children>
+                                 <VBox.margin>
+                                    <Insets top="10.0" />
+                                 </VBox.margin>
+                              </HBox>
+                              <HBox prefHeight="100.0" prefWidth="200.0">
+                                 <children>
+                                    <Label prefHeight="25.0" prefWidth="37.0" text="RH: " textFill="RED">
+                                       <font>
+                                          <Font name="Arial Bold" size="18.0" />
+                                       </font>
+                                    </Label>
+                                    <Label fx:id="patientRH" text="Label">
+                                       <font>
+                                          <Font size="18.0" />
+                                       </font>
+                                    </Label>
                                  </children>
                                  <VBox.margin>
                                     <Insets top="10.0" />
@@ -156,10 +214,9 @@
                               </HBox>
                            </children>
                            <padding>
-                              <Insets left="40.0" top="20.0" />
+                              <Insets left="20.0" />
                            </padding>
                         </VBox>
-                        <HBox prefHeight="100.0" prefWidth="225.0" />
                      </children>
                      <VBox.margin>
                         <Insets top="35.0" />

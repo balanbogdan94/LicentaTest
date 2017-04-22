@@ -4,12 +4,32 @@ public class Sensor {
 	private int objectId;
 	private String sensorName;
 	private boolean isAnalog;
+	private int frequency;
+	private int channel;
 	
 	
 	
-	public Sensor(int objectId,String sensorName, int isAnalog){
+	public int getFrequency() {
+		return frequency;
+	}
+
+	public void setFrequency(int frequency) {
+		this.frequency = frequency;
+	}
+
+	public int getChannel() {
+		return channel;
+	}
+
+	public void setChannel(int channel) {
+		this.channel = channel;
+	}
+
+	public Sensor(int objectId,String sensorName, int isAnalog,int frequency,int channel){
 		this.objectId=objectId;
 		this.sensorName=sensorName;
+		this.channel=channel;
+		this.frequency=frequency;
 		if(isAnalog==1)
 		{
 			this.isAnalog=true;

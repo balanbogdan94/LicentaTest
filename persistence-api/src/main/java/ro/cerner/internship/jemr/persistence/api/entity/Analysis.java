@@ -7,48 +7,38 @@ public class Analysis {
 	private int objectId;
 	private int examinationId;
 	private byte[] sensorData;
-	private int sensorId;
-	private String sensorName;
-	private int frequency;
+	private Sensor sensor;
 	private LocalDateTime startDate;
 	private LocalDateTime stopDate;
 	private String startDateFormated;
 	private String stopDateFormated;
 	private String consultationDiagnostic;
-	private int channelId;
-	private int channelNumber;
 	private int idForTable;
 	
 	
-	public Analysis(int examinationId, byte[]sensorData, int sensorId, int frequency, LocalDateTime startDate,
-			LocalDateTime stopDate,int channelId) {
+	public Analysis(int examinationId, byte[]sensorData, Sensor sensor, LocalDateTime startDate,
+			LocalDateTime stopDate) {
 
 		this.examinationId = examinationId;
 		this.sensorData = sensorData;
-		this.sensorId = sensorId;
-		this.frequency = frequency;
+		this.sensor = sensor;
 		this.startDate = startDate;
 		this.stopDate = stopDate;
-		this.channelId= channelId;
 	}
 
-	public Analysis(int frequency,String sensorName, LocalDateTime startDate,String startDateFormated,int objectId,String diagnostic,int channelNumber) {
-		this.setSensorName(sensorName);
-		this.frequency = frequency;
+	public Analysis(Sensor sensor, LocalDateTime startDate,String startDateFormated,int objectId,String diagnostic) {
+		this.sensor=sensor;
 		this.startDate = startDate;
 		this.objectId=objectId;
 		this.consultationDiagnostic=diagnostic;
-		this.channelNumber=channelNumber;
 		this.startDateFormated=startDateFormated;
 	}
 
-	public Analysis(String sensorName, int frequency, LocalDateTime startDate,String startDateFormated, LocalDateTime stopDate,String stopDateFormated,int objectId,int channelNumber) {
-		this.setSensorName(sensorName);
-		this.frequency = frequency;
+	public Analysis(Sensor sensor, LocalDateTime startDate,String startDateFormated, LocalDateTime stopDate,String stopDateFormated,int objectId) {
+		this.sensor=sensor;
 		this.startDate = startDate;
 		this.stopDate = stopDate;
 		this.objectId=objectId;
-		this.channelNumber=channelNumber;
 		this.startDateFormated=startDateFormated;
 		this.stopDateFormated=stopDateFormated;
 	}
@@ -84,25 +74,14 @@ public class Analysis {
 	}
 
 
-	public int getSensorId() {
-		return sensorId;
+	public Sensor getSensor() {
+		return sensor;
 	}
 
 
-	public void setSensorId(int sensorId) {
-		this.sensorId = sensorId;
+	public void setSensorId(Sensor sensor) {
+		this.sensor = sensor;
 	}
-
-
-	public int getFrequency() {
-		return frequency;
-	}
-
-
-	public void setFrequency(int frequency) {
-		this.frequency = frequency;
-	}
-
 
 	public LocalDateTime getStartDate() {
 		return startDate;
@@ -132,39 +111,13 @@ public class Analysis {
 		this.consultationDiagnostic = consultationDiagnostic;
 	}
 	
-	
 
-	public int getChannelId() {
-		return channelId;
-	}
-
-	public void setChannelId(int channelId) {
-		this.channelId = channelId;
-	}
-
-	public int getChannelNumber() {
-		return channelNumber;
-	}
-
-	public void setChannelNumber(int channelNumber) {
-		this.channelNumber = channelNumber;
-	}
 
 	@Override
 	public String toString() {
 		return "Analysis [objectId=" + objectId + ", examinationId=" + examinationId + ", sensorData=" + sensorData
-				+ ", sensorId=" + sensorId + ", frequency=" + frequency + ", startDate=" + startDate + ", stopDate="
+				+ ", sensorId=" + sensor.getObjectId() + ", startDate=" + startDate + ", stopDate="
 				+ stopDate + "]";
-	}
-
-
-	public String getSensorName() {
-		return sensorName;
-	}
-
-
-	public void setSensorName(String sensorName) {
-		this.sensorName = sensorName;
 	}
 
 	public int getIdForTable() {

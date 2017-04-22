@@ -65,8 +65,6 @@ public class AdminLayoutController implements Initializable {
 	@FXML
 	private TableColumn<Doctor, String> speciality = new TableColumn<Doctor, String>();
 	@FXML
-	private AnchorPane ap;
-	@FXML
 	Button updateButton;
 	@FXML
 	TextField searchTextBox;
@@ -80,7 +78,7 @@ public class AdminLayoutController implements Initializable {
 	 PieChart specialtyPieChart;
 	@FXML 
 	private BarChart<String, Integer> numberOfPatientsChart;
-	
+
 	Admin currentAdmin = new Admin();
 	ObservableList<Doctor> doctorList;
 	ViewModel view = SpringApplicationContext.instance().getBean("ViewModel", ViewModel.class);
@@ -94,17 +92,12 @@ public class AdminLayoutController implements Initializable {
 	public void logOut(ActionEvent event) {
 		try {
 
-			Stage primaryStage = new Stage();
 			Pane root;
 			root = FXMLLoader.load(
 					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml"));
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
-			primaryStage.show();
-
-			((Node) event.getSource()).getScene().getWindow().hide();
-
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			deleteButton.getScene().setRoot(root);
+			
 		} catch (IOException e) { // TODO Auto-generated
 			e.printStackTrace();
 		}

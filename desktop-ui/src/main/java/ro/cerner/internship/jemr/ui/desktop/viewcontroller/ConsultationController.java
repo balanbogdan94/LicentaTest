@@ -25,6 +25,7 @@ import javafx.scene.control.Label;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableRow;
 import javafx.scene.control.TableView;
+import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.MouseEvent;
@@ -44,8 +45,12 @@ public class ConsultationController implements Initializable {
 	private Label nameOfDoctor;
 	@FXML
 	private Label patientName;
-	@FXML 
+	@FXML
+	private Label patientDOB;
+	@FXML
 	private Label patientAge;
+	@FXML
+	private Label patientRH;
 	@FXML
 	private Label patientBloodType;
 	@FXML
@@ -54,6 +59,8 @@ public class ConsultationController implements Initializable {
 	private Button deleteConsultation;
 	@FXML
 	private ImageView femaleSign;
+	@FXML
+	private TextField diagnosticSearchBox;
 	@FXML
 	private ImageView maleSign;
 	@FXML
@@ -70,58 +77,33 @@ public class ConsultationController implements Initializable {
 	Doctor currentDoctor;
 	ViewModel view = SpringApplicationContext.instance().getBean("ViewModel", ViewModel.class);
 	ObservableList<Examination> examinationList;
+	private Stage primaryStage;
 
 	public void setCurrentPatient(Patient selectedPatient, Doctor currentDoctor) {
 		this.selectedPatient = selectedPatient;
 		this.currentDoctor = currentDoctor;
-		this.nameOfDoctor.setText(currentDoctor.getFirstName()+" "+currentDoctor.getLastName());
-		this.patientName.setText(selectedPatient.getFirstName()+" "+selectedPatient.getLastName());
-		this.patientAge.setText(selectedPatient.getDateOfBirth().toString());
-		this.patientBloodType.setText(selectedPatient.getBloodType()+" "+selectedPatient.getRH());
+		this.nameOfDoctor.setText(currentDoctor.getFirstName() + " " + currentDoctor.getLastName());
+		this.patientName.setText(selectedPatient.getFirstName() + " " + selectedPatient.getLastName());
+		this.patientDOB.setText(selectedPatient.getDateOfBirth().toString());
+		this.patientBloodType.setText(selectedPatient.getBloodType());
+		this.patientRH.setText(selectedPatient.getRH());
+		this.patientAge.setText(String.valueOf(view.patientAge(selectedPatient.getDateOfBirth())) + " years");
 		this.femaleSign.setVisible(selectedPatient.getGender().equals("F"));
 		this.maleSign.setVisible(selectedPatient.getGender().equals("M"));
-		ObservableList<Examination> examinationList = FXCollections
-				.observableArrayList(view.viewListOfExaminations(selectedPatient.getObjectID()));
+		examinationList = FXCollections.observableArrayList(view.viewListOfExaminations(selectedPatient.getObjectID()));
 		tableView.setItems(examinationList);
 	}
-	
+
 	@FXML
 	public void backToDoctorView(MouseEvent event) {
 		try {
-			Stage primaryStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(getClass()
+			Pane root = loader.load(getClass()
 					.getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/FirstPage.fxml").openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			FirstPageController pageController = (FirstPageController) loader.getController();
 			pageController.getCurrentDoctor(currentDoctor);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						Platform.exit();
-					}
-				}
-			});
-			((Node) event.getSource()).getScene().getWindow().hide();
-			primaryStage.show();
-			
+			deleteConsultation.getScene().setRoot(root);		
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -182,44 +164,16 @@ public class ConsultationController implements Initializable {
 	public <T> void viewOldConsultation(T event) {
 
 		try {
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(getClass()
-					.getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/ViewOldConsultation.fxml")
-					.openStream());
-
-			ViewOldConsultationController controler = (ViewOldConsultationController) loader.getController();
 			selectedExamination = tableView.getSelectionModel().getSelectedItem();
 			if (selectedExamination != null) {
+				FXMLLoader loader = new FXMLLoader();
+				Pane root = loader.load(getClass()
+						.getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/ViewOldConsultation.fxml")
+						.openStream());
+				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+				ViewOldConsultationController controler = (ViewOldConsultationController) loader.getController();
 				controler.setCurrentExamination(selectedExamination, selectedPatient, currentDoctor);
-
-				Scene scene = new Scene(root);
-				primaryStage.setScene(scene);
-				primaryStage.setMaximized(true);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ((EventObject) event).getSource()).getScene().getWindow().hide();
+				deleteConsultation.getScene().setRoot(root);
 			} else {
 				Alert alert = new Alert(AlertType.WARNING);
 				alert.setTitle("Information Dialog");
@@ -264,22 +218,24 @@ public class ConsultationController implements Initializable {
 	}
 
 	public void refreshTheTable() {
-		examinationList = FXCollections.observableArrayList(view.viewListOfExaminations(selectedPatient.getObjectID()));
+
 		tableView.setItems(examinationList);
+	}
+
+	public void searchDiagnostic(ActionEvent e) {
+		examinationList = FXCollections.observableArrayList(view.searchDiagnostic(diagnosticSearchBox.getText()));
+		refreshTheTable();
+
 	}
 
 	public void logOut(ActionEvent event) {
 		try {
-			Stage primaryStage = new Stage();
+
 			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide();
-			Pane root;
-			root = loader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml"));
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setResizable(false);
-			primaryStage.show();
+			Pane root = loader.load(getClass()
+					.getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml").openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
+			deleteConsultation.getScene().setRoot(root);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -287,12 +243,6 @@ public class ConsultationController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		DoubleBinding bind = tableView.widthProperty().divide(3);
-
-		dateColumn.prefWidthProperty().bind(bind);
-		diagnosticColumn.prefWidthProperty().bind(bind);
-		commentsColumn.prefWidthProperty().bind(bind);
 
 		dateColumn.setCellValueFactory(new PropertyValueFactory<Examination, String>("examinationDateFormated"));
 		diagnosticColumn.setCellValueFactory(new PropertyValueFactory<Examination, String>("Diagnostic"));
@@ -315,7 +265,7 @@ public class ConsultationController implements Initializable {
 		});
 
 	}
-	
+
 	public void compareConsultations(ActionEvent event) {
 		try {
 			Stage primaryStage = new Stage();
@@ -356,5 +306,4 @@ public class ConsultationController implements Initializable {
 			e.printStackTrace();
 		}
 	}
-
 }

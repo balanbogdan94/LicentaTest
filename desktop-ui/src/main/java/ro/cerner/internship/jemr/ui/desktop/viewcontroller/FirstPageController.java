@@ -71,7 +71,7 @@ public class FirstPageController implements Initializable {
 	private Button updateButton;
 	@FXML
 	private Button viewClinicalHistory;
-
+	private Stage primaryStage;
 	@FXML
 	private TableColumn<Patient, String> tableFirstNameView = new TableColumn<Patient, String>();
 	@FXML
@@ -132,18 +132,11 @@ public class FirstPageController implements Initializable {
 	public void signOut(ActionEvent event) {
 
 		try {
-			Stage primaryStage = new Stage();
-			((Node) event.getSource()).getScene().getWindow().hide();
 			Pane root;
-
-			root = FXMLLoader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml"));
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.show();
-
+			FXMLLoader loader=new FXMLLoader();
+			root = loader.load(
+					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml").openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 		} catch (IOException e) { // TODO Auto-generated
 			e.printStackTrace();
 		}
@@ -152,13 +145,6 @@ public class FirstPageController implements Initializable {
 
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
-
-		DoubleBinding bind = patientTableView.widthProperty().divide(5);
-		tableBloodTypeView.prefWidthProperty().bind(bind);
-		tableRHView.prefWidthProperty().bind(bind);
-		tableFirstNameView.prefWidthProperty().bind(bind);
-		tableLastNameView.prefWidthProperty().bind(bind);
-		tableAgeView.prefWidthProperty().bind(bind);
 		tableBloodTypeView.setCellValueFactory(new PropertyValueFactory<Patient, String>("BloodType"));
 		tableRHView.setCellValueFactory(new PropertyValueFactory<Patient, String>("RH"));
 		tableFirstNameView.setCellValueFactory(new PropertyValueFactory<Patient, String>("FirstName"));
@@ -182,7 +168,6 @@ public class FirstPageController implements Initializable {
 			});
 			return row;
 		});
-
 	}
 
 	public void createPacient(ActionEvent event) {
@@ -286,14 +271,7 @@ public class FirstPageController implements Initializable {
 
 	public <T> void viewClinicalHistory(T event) {
 		try {
-			Stage primaryStage = new Stage();
-			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-
-			root = loader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
-							.openStream());
-			ConsultationController patient = (ConsultationController) loader.getController();
+			
 			Patient selectedPatient = patientTableView.getSelectionModel().getSelectedItem();
 			if (selectedPatient == null) {
 				Alert alert = new Alert(AlertType.WARNING);
@@ -302,34 +280,15 @@ public class FirstPageController implements Initializable {
 				alert.setContentText("You have not selected a Patient!");
 				alert.showAndWait();
 			} else {
-				patient.setCurrentPatient(selectedPatient, currentDoctor);
-				Scene scene = new Scene(root);
+				FXMLLoader loader = new FXMLLoader();
+				Pane root = loader.load(
+						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
+								.openStream());
 				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-				primaryStage.setScene(scene);
-				primaryStage.setMaximized(true);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ((EventObject) event).getSource()).getScene().getWindow().hide();
+				ConsultationController patient = (ConsultationController) loader.getController();
+				patient.setCurrentPatient(selectedPatient, currentDoctor);
+				deleteButton.getScene().setRoot(root);
+				
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -434,4 +393,7 @@ public class FirstPageController implements Initializable {
 		sexChart.setData(pieChartData);
 	}
 
+	public void setPrimaryStage(Stage primaryStage) {
+		this.primaryStage=primaryStage;
+	}
 }

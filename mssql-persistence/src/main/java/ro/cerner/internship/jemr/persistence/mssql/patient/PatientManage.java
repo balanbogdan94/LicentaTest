@@ -23,12 +23,14 @@ import ro.cerner.internship.jemr.persistence.api.entity.Examination;
 import ro.cerner.internship.jemr.persistence.api.entity.Patient;
 import ro.cerner.internship.jemr.persistence.api.patientRepo.PatientRepository;
 import ro.cerner.internship.jemr.persistence.mssql.Database;
+import ro.cerner.internship.jemr.persistence.mssql.config.ConfigManage;
 import ro.cerner.internship.jemr.persistence.mssql.config.EncryptPassword;
 
 @Named("PatientManage")
 public class PatientManage implements PatientRepository {
 	Connection con = Database.getInstance().getConnect();
 	Patient currentPatient = null;
+	ConfigManage configManage=new ConfigManage();
 
 	private String getStringFromDate(LocalDateTime date) {
 		DateTimeFormatter sdfDate = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss.SSS");
@@ -53,15 +55,13 @@ public class PatientManage implements PatientRepository {
 		}
 
 		try {
-			CallableStatement stmt = con.prepareCall("{call JInsertIntoAnalysis(?,?,?,?,?,?,?)}");
+			CallableStatement stmt = con.prepareCall("{call JInsertIntoAnalysis(?,?,?,?,?)}");
 			System.out.println("here");
 			stmt.setInt(1, analysis.getExaminationId());
 	    	stmt.setBlob(2, blob);
-			stmt.setInt(3, analysis.getSensorId());
-			stmt.setInt(4, analysis.getFrequency());
-			stmt.setString(5, startDate);
-			stmt.setString(6, stopDate);
-			stmt.setInt(7, analysis.getChannelId());
+			stmt.setInt(3, analysis.getSensor().getObjectId());
+			stmt.setString(4, startDate);
+			stmt.setString(5, stopDate);
 			stmt.executeUpdate();
 		} catch (Exception e) {
 			// TODO: handle exception
@@ -168,8 +168,8 @@ public class PatientManage implements PatientRepository {
 				DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime dateTime1 = LocalDateTime.parse(procesedString1, formatter1);
 
-				currentAnalysis = new Analysis(rs.getString("SensorName"), rs.getInt("Rate"), dateTime,dateToBeFormatted, dateTime1,dateToBeFormatted1,
-						rs.getInt("ObjectID"),rs.getInt("Number"));
+				currentAnalysis = new Analysis(configManage.getSensorByID(rs.getInt("SensorId")), dateTime,dateToBeFormatted, dateTime1,dateToBeFormatted1,
+						rs.getInt("ObjectID"));
 
 				analysisList.add(currentAnalysis);
 			}
@@ -198,8 +198,8 @@ public class PatientManage implements PatientRepository {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime dateTime = LocalDateTime.parse(procesedStringForDate, formatter);
 				
-				currentAnalysis = new Analysis( rs.getInt("Rate"),rs.getString("SensorName"), dateTime,procesedString,
-						rs.getInt("ObjectID"),rs.getString("Diagnostic"),rs.getInt("Number"));
+				currentAnalysis = new Analysis(configManage.getSensorByID(sensorId), dateTime,procesedString,
+						rs.getInt("ObjectID"),rs.getString("Diagnostic"));
 
 				allAnalysisList.add(currentAnalysis);
 			}

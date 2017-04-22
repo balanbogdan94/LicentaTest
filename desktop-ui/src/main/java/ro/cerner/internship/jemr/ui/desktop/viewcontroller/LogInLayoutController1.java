@@ -42,18 +42,12 @@ public class LogInLayoutController1 {
 	private PasswordField passwordInput;
 	@FXML
 	private Label messageLabel;
-
 	User curentUser = new User();
 
-	public void logInOnClick(ActionEvent event) {
-		logInPerformed(event);
-	}
-
-	public <T> void logInPerformed(T event) {
-		messageLabel.setText("aaaaaaaaaaaaaaaaa");
+	@FXML
+	public void logInPerformed(ActionEvent event) {
 		try {
 			CheckUser checkUser = SpringApplicationContext.instance().getBean("CheckUser", CheckUser.class);
-
 			curentUser = checkUser.checkCurentUser(usernameInput.getText(), passwordInput.getText());
 
 			if (curentUser == null) {
@@ -65,89 +59,37 @@ public class LogInLayoutController1 {
 				messageLabel.setText("User/Password incorect");
 			}
 //Admin
-			else if (curentUser.getType() == 1) {
-				Stage primaryStage = new Stage();
+			else if (curentUser.getType() == 1)
+			{
 				FXMLLoader loader = new FXMLLoader();
 				Pane root = loader.load(
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/AdminLayout.fxml")
 								.openStream());
+				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				AdminLayoutController adminController=(AdminLayoutController)loader.getController();
 				adminController.getCurrentAdmin((Admin)curentUser);
-				Scene scene = new Scene(root);
-				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-				primaryStage.setMaximized(true);
-				primaryStage.setScene(scene);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ((EventObject) event).getSource()).getScene().getWindow().hide();
+				messageLabel.getScene().setRoot(root);
 
 			}
-
-			// Doctor
-			else if (curentUser.getType() == 2) {
-				Stage primaryStage = new Stage();
+//Doctor
+			else if (curentUser.getType() == 2) 
+			{
 				FXMLLoader loader = new FXMLLoader();
-				Pane root;
-				root = loader.load(
+				Pane root= loader.load(
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/FirstPage.fxml")
 								.openStream());
-				FirstPageController pageController = (FirstPageController) loader.getController();
-				Doctor currentDoctor = (Doctor) curentUser;
-				pageController.getCurrentDoctor(currentDoctor);
-				Scene scene = new Scene(root);
 				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-				primaryStage.setScene(scene);
-				primaryStage.setMaximized(true);
-				primaryStage.setMinHeight(root.getPrefHeight());
-				primaryStage.setMinWidth(root.getPrefWidth());
-				primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-					@Override
-					public void handle(WindowEvent event) {
-
-						// consume event
-						event.consume();
-
-						// show close dialog
-						Alert alert = new Alert(AlertType.CONFIRMATION);
-						alert.setTitle("Close Confirmation");
-						alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-						alert.initOwner(primaryStage);
-
-						Optional<ButtonType> result = alert.showAndWait();
-						if (result.get() == ButtonType.OK) {
-							Platform.exit();
-						}
-					}
-				});
-				primaryStage.show();
-				((Node) ((EventObject) event).getSource()).getScene().getWindow().hide();
-
+				FirstPageController pageController = (FirstPageController) loader.getController();
+				pageController.getCurrentDoctor(((Doctor)curentUser));
+				messageLabel.getScene().setRoot(root);				
 			}
-		} catch (IOException e) {
+		}
+		catch (IOException e) 
+		{
 			messageLabel.setText("Error ocured, please try again");
 			e.printStackTrace();
 		}
-
 	}
+	
 
 }

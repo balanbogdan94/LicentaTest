@@ -10,34 +10,13 @@ import java.util.List;
 import javax.inject.Named;
 
 import ro.cerner.internship.jemr.persistence.api.config.ConfigRepository;
-import ro.cerner.internship.jemr.persistence.api.entity.Channel;
-import ro.cerner.internship.jemr.persistence.api.entity.Frequency;
 import ro.cerner.internship.jemr.persistence.api.entity.Sensor;
 import ro.cerner.internship.jemr.persistence.mssql.Database;
 
 @Named("ConfigManage")
 public class ConfigManage implements ConfigRepository {
 	Connection con = Database.getInstance().getConnect();
-	@Override
-	public List<Frequency> displayFrequency() {
-		Frequency frequency;
-		
-		List<Frequency> frequencyList = new ArrayList<>();
-		try {
-			CallableStatement stmt = con.prepareCall("{call JselectAllFrequency }");
-			ResultSet rs = stmt.executeQuery();
-			while (rs.next()) {
-				frequency = new Frequency(rs.getInt("ObjectId"), rs.getString("Rate"));
-				frequencyList.add(frequency);
-
-			}
-		} catch (Exception e) {
-
-		}
-
-		return frequencyList;
-	}
-
+	
 	@Override
 	public List<Sensor> displaySensor() {
 		Sensor sensor;
@@ -46,7 +25,7 @@ public class ConfigManage implements ConfigRepository {
 			CallableStatement stmt = con.prepareCall("{ call JSensorView }");
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				sensor = new Sensor(rs.getInt("ObjectID"), rs.getString("SensorName"), rs.getInt("IsAnalog"));
+				sensor = new Sensor(rs.getInt("ObjectID"), rs.getString("SensorName"), rs.getInt("IsAnalog"),rs.getInt("Frequency"),rs.getInt("Channel"));
 				sensorList.add(sensor);
 
 			}
@@ -57,24 +36,23 @@ public class ConfigManage implements ConfigRepository {
 		return sensorList;
 	}
 	
-	@Override
-	public List<Channel> displayChannel(){
-		Channel channel;
-		List<Channel> channelList=new ArrayList<>();
-		try{
-			CallableStatement stmt=con.prepareCall("{call JChannelView}");
+	public Sensor getSensorByID(int Id )
+	{
+		Sensor sensor=null;
+		try
+		{
+			CallableStatement stmt=con.prepareCall("{call JGetSensorByID (?)}");
+			stmt.setInt(1, Id);
 			ResultSet rs=stmt.executeQuery();
-			while(rs.next())
+			while (rs.next())
 			{
-				channel=new Channel(rs.getInt("ObjectID"), rs.getInt("Number"), rs.getInt("Resolution"));
-				channelList.add(channel);
+				sensor = new Sensor(rs.getInt("ObjectID"), rs.getString("SensorName"), rs.getInt("IsAnalog"),rs.getInt("Frequency"),rs.getInt("Channel"));
 			}
 		}
-		catch(SQLException e)
+		catch (Exception e)
 		{
 			e.printStackTrace();
 		}
-		return channelList;
+		return sensor;
 	}
-
 }
