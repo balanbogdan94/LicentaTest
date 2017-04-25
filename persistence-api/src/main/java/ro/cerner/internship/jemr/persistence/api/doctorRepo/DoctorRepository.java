@@ -6,7 +6,7 @@ import ro.cerner.internship.jemr.persistence.api.entity.Doctor;
 
 public interface DoctorRepository {
 	
-	public void AddDoctor(Doctor doctor);
+	public void addDoctor(Doctor doctor);
 	
 	public void deleteDoctorFromDB(int id);
 	

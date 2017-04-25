@@ -16,14 +16,12 @@ import ro.cerner.internship.jemr.persistence.mssql.Database;
 import ro.cerner.internship.jemr.persistence.mssql.config.EncryptPassword;
 
 @Named("DoctorManage")
-public class DoctorManage implements DoctorRepository {
-
-	Connection con = Database.getInstance().getConnect();
-
+public class DoctorManage implements DoctorRepository 
+{
+	Connection con = Database.getInstance().getConnection();
 	@Override
-	public void AddDoctor(Doctor doctor) {
-
-		EncryptPassword encrypt=new EncryptPassword();
+	public void addDoctor(Doctor doctor) 
+	{
 		try {
 			CallableStatement stmt = con.prepareCall("{call JInsertDoctor (?,?,?,?,?,?,?,?,?,?,?,?) }");
 			stmt.setInt(1, doctor.getType());
@@ -36,53 +34,52 @@ public class DoctorManage implements DoctorRepository {
 			stmt.setString(8, doctor.getPhoneNumber());
 			stmt.setString(9, doctor.getEmailAddress());
 			stmt.setString(10, doctor.getUserName());
-			stmt.setString(11, encrypt.encryptPassword(doctor.getUserPassword()));
+			stmt.setString(11, EncryptPassword.encryptPassword(doctor.getUserPassword()));
 			stmt.setString(12, doctor.getSpecialty());
 			stmt.executeUpdate();
-			System.out.println("New doctor added to the database.");
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void deleteDoctorFromDB(int id) {
-
-		try {
+	public void deleteDoctorFromDB(int id) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JDeleteFromDoctor (?)}");
 			stmt.setInt(1, id);
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Error in deleting Doctor");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public List<Doctor> displayDoctors(String search) {
-
-		Doctor currentDoctor = null;
-		List<Doctor> doctorList;
-		doctorList = new ArrayList<>();
-		try {
+	public List<Doctor> displayDoctors(String search) 
+	{
+		List<Doctor> doctorList = new ArrayList<>();
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JDoctorView (?)}");
 			stmt.setString(1, search);
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
-				currentDoctor = new Doctor(rs.getInt("ObjectID"), rs.getInt("PersonId"), rs.getInt("PersonType"),
+				doctorList.add(new Doctor(rs.getInt("ObjectID"), rs.getInt("PersonId"), rs.getInt("PersonType"),
 						rs.getString("FirstName"), rs.getString("LastName"), rs.getString("CNP"),
 						rs.getString("Gender"), rs.getDate("DateOfBirth").toLocalDate(), rs.getString("HomeAddress"),
 						rs.getString("PhoneNumber"), rs.getString("EmailAddress"), rs.getString("UserName"),
-						rs.getString("UserPassword"), rs.getString("Specialty"));
-
-				doctorList.add(currentDoctor);
+						rs.getString("UserPassword"), rs.getString("Specialty")));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return doctorList;
@@ -107,8 +104,10 @@ public class DoctorManage implements DoctorRepository {
 	}
 
 	@Override
-	public void updateDoctorPersonalInfo(Doctor currentDoctor) {
-		try {
+	public void updateDoctorPersonalInfo(Doctor currentDoctor) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JupdatePersonalInfo(?,?,?,?,?,?,?,?,?)}");
 			stmt.setInt(1, currentDoctor.getIdObject());
 			stmt.setString(2, currentDoctor.getFirstName());
@@ -119,26 +118,28 @@ public class DoctorManage implements DoctorRepository {
 			stmt.setString(7, currentDoctor.getHomeAddress());
 			stmt.setString(8, currentDoctor.getPhoneNumber());
 			stmt.setString(9, currentDoctor.getEmailAddress());
-			// stmt.executeQuery();
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("SQl error during update");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 	}
 
 	@Override
-	public void updateDoctorSpecificInfo(Doctor currentDoctor) {
-		try {
+	public void updateDoctorSpecificInfo(Doctor currentDoctor) 
+	{
+		try
+		{
 			CallableStatement stmt = con.prepareCall("{call JupdateDoctorSpeciality(?,?)}");
 			stmt.setInt(1, currentDoctor.getIdObject());
 			stmt.setString(2, currentDoctor.getSpecialty());
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
-
 	}
 	
 	public int getNumberOfPatients(int doctorId)
@@ -152,8 +153,9 @@ public class DoctorManage implements DoctorRepository {
 			{
 				numberOfPatients=rs.getInt("NumberOfPatients");
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return numberOfPatients;

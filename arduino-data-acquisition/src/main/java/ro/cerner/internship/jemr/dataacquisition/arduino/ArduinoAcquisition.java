@@ -23,10 +23,8 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 
 	@Override
 	public ArrayList<Short> readData(Configuration configuration) throws Exception {
-		System.out.println("Sunt aici");
 		ArrayList<Short> rawData=new ArrayList<>();
 		rawData.add(getNumberFromArduino());
-		System.out.println("SUNT AICI");
 		return rawData;
 	}
 
@@ -35,7 +33,7 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 		streamConnection=(StreamConnection)Connector.open("btspp://98D331FC1375:1;authenticate=false;encrypt=false;master=false");
 		is = streamConnection.openInputStream();
 	    os=streamConnection.openOutputStream();
-		os.write(2);
+		os.write(configuration.getFrequency());
 	}
 
 	@Override
@@ -49,13 +47,15 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 	private short getNumberFromArduino(){
 		short number;
 		String res=new String();
-		try {
+		try
+		{
 			while((number=(short) is.read())!=10)
 			{
 				res=res+(char)number;
 			}
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (IOException e) 
+		{
 			e.printStackTrace();
 		}
 		

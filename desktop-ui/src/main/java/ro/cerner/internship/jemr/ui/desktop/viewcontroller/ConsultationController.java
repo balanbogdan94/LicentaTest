@@ -113,44 +113,15 @@ public class ConsultationController implements Initializable {
 		CreateModel model = SpringApplicationContext.instance().getBean("CreateModel", CreateModel.class);
 		int id = model.addExamination(selectedPatient.getObjectID());
 		try {
-			Stage primaryStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			Pane root;
-			root = loader.load(
+			Pane root = loader.load(
 					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/NewConsultation.fxml")
 							.openStream());
-
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			NewConsultationController controler = (NewConsultationController) loader.getController();
 			controler.setAnalysis(selectedPatient, currentDoctor, id);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						DeleteModel model = SpringApplicationContext.instance().getBean("DeleteModel",
-								DeleteModel.class);
-						model.deleteExamination(id);
-						Platform.exit();
-					}
-				}
-			});
-			primaryStage.show();
-			((Node) event.getSource()).getScene().getWindow().hide();
+			diagnosticSearchBox.getScene().setRoot(root);
+			
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
@@ -268,40 +239,14 @@ public class ConsultationController implements Initializable {
 
 	public void compareConsultations(ActionEvent event) {
 		try {
-			Stage primaryStage = new Stage();
 			FXMLLoader loader = new FXMLLoader();
-			((Node) event.getSource()).getScene().getWindow().hide();
-			Pane root;
-			root = loader.load(
+			Pane root= loader.load(
 					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/CompareWindow.fxml")
 							.openStream());
+			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 			CompareController controller = (CompareController) loader.getController();
 			controller.setDoctorAndPatient(currentDoctor, selectedPatient);
-			Scene scene = new Scene(root);
-			primaryStage.setScene(scene);
-			primaryStage.setMaximized(true);
-			primaryStage.setMinHeight(root.getPrefHeight());
-			primaryStage.setMinWidth(root.getPrefWidth());
-			primaryStage.setOnCloseRequest(new EventHandler<WindowEvent>() {
-				@Override
-				public void handle(WindowEvent event) {
-
-					// consume event
-					event.consume();
-
-					// show close dialog
-					Alert alert = new Alert(AlertType.CONFIRMATION);
-					alert.setTitle("Close Confirmation");
-					alert.setHeaderText("Do you really want to quit THE APPLICATION?");
-					alert.initOwner(primaryStage);
-
-					Optional<ButtonType> result = alert.showAndWait();
-					if (result.get() == ButtonType.OK) {
-						Platform.exit();
-					}
-				}
-			});
-			primaryStage.show();
+			diagnosticSearchBox.getScene().setRoot(root);
 		} catch (IOException e) {
 			e.printStackTrace();
 		}

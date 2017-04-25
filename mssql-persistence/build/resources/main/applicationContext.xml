@@ -44,29 +44,6 @@
         </property>
 		<property name="username" value="sa" />
         <property name="password" value="1234"/>
-
-
-<!-- RALUCA
-        <property name="url" value="jdbc:sqlserver://CERNER-NLIVUU6B:1433;DatabaseName=InternshipProjectDB" />
-        <property name="connectionProperties">
-        	<props>
-        		<prop key="loginTimeout">1</prop>
-        	</props>
-        </property>
-        <property name="username" value="sa" />
-        <property name="password" value="Root123456" />
--->
-
-<!-- BIRS
-        <property name="url" value="jdbc:sqlserver://CERNER-LV73NN8J:1433;DatabaseName=InternshipProjectDB" />
-        <property name="connectionProperties">
-        	<props>
-        		<prop key="loginTimeout">1</prop>
-        	</props>
-        </property>
-        <property name="username" value="sa" />
-        <property name="password" value="123456" />
--->
     </bean>
     
 </beans>

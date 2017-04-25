@@ -89,20 +89,7 @@ public class AdminLayoutController implements Initializable {
 		adminName.setText(admin.getFirstName()+" "+admin.getLastName());
 	}
 
-	public void logOut(ActionEvent event) {
-		try {
-
-			Pane root;
-			root = FXMLLoader.load(
-					getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/LogInLayout.fxml"));
-			root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
-			deleteButton.getScene().setRoot(root);
-			
-		} catch (IOException e) { // TODO Auto-generated
-			e.printStackTrace();
-		}
-
-	}
+	
 
 	public void createDoctor(ActionEvent event) {
 		try {

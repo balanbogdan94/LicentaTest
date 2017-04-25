@@ -21,11 +21,11 @@ public class CreateModel {
 	PatientRepository newPatientStuff;
 
 	public void addDoctor(Doctor currentDoctor) {
-		newDoctor.AddDoctor(currentDoctor);
+		newDoctor.addDoctor(currentDoctor);
 	}
 
 	public void addPatient(Patient currentPatient) {
-		newPatientStuff.AddPatientWithAccount(currentPatient);
+		newPatientStuff.addPatientWithAccount(currentPatient);
 	}
 
 	public int addExamination(int pacientId) {

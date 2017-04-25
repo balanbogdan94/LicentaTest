@@ -17,7 +17,6 @@ import java.util.List;
 import javax.inject.Named;
 import javax.sql.rowset.serial.SerialException;
 
-import javafx.beans.binding.BooleanBinding;
 import ro.cerner.internship.jemr.persistence.api.entity.Analysis;
 import ro.cerner.internship.jemr.persistence.api.entity.Examination;
 import ro.cerner.internship.jemr.persistence.api.entity.Patient;
@@ -28,7 +27,7 @@ import ro.cerner.internship.jemr.persistence.mssql.config.EncryptPassword;
 
 @Named("PatientManage")
 public class PatientManage implements PatientRepository {
-	Connection con = Database.getInstance().getConnect();
+	Connection con = Database.getInstance().getConnection();
 	Patient currentPatient = null;
 	ConfigManage configManage=new ConfigManage();
 
@@ -90,10 +89,10 @@ public class PatientManage implements PatientRepository {
 	}
 
 	@Override
-	public void AddPatientWithAccount(Patient patient) {
-		EncryptPassword encrypt=new EncryptPassword();
-		try {
-			System.out.println(patient.getUserName());
+	public void addPatientWithAccount(Patient patient) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JInsertPacientWithAccount (?,?,?,?,?,?,?,?,?,?,?,?,?,?) }");
 			stmt.setInt(1, patient.getType());
 			stmt.setString(2, patient.getFirstName());
@@ -108,25 +107,27 @@ public class PatientManage implements PatientRepository {
 			stmt.setString(11, patient.getRH());
 			stmt.setInt(12, patient.getDoctorID());
 			stmt.setString(13, patient.getUserName());
-			stmt.setString(14, encrypt.encryptPassword(patient.getUserPassword()));
+			stmt.setString(14, EncryptPassword.encryptPassword(patient.getUserPassword()));
 			stmt.executeUpdate();
-			System.out.println("New pacient added to the database.");
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void deleteExaminationFromDB(int objectID) {
-		try {
+	public void deleteExaminationFromDB(int objectID) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JDeleteExamination (?)}");
 			stmt.setInt(1, objectID);
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Error in deleting Examination");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
@@ -147,14 +148,11 @@ public class PatientManage implements PatientRepository {
 
 	@Override
 	public List<Analysis> displayAnalysis(int examinationId) {
-		Analysis currentAnalysis = null;
-		List<Analysis> analysisList;
-		Connection con = Database.getInstance().getConnect();
-		analysisList = new ArrayList<>();
-		try {
+		List<Analysis> analysisList = new ArrayList<>();
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JViewAnalysis (?)}");
 			stmt.setInt(1, examinationId);
-
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 
@@ -168,24 +166,23 @@ public class PatientManage implements PatientRepository {
 				DateTimeFormatter formatter1 = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime dateTime1 = LocalDateTime.parse(procesedString1, formatter1);
 
-				currentAnalysis = new Analysis(configManage.getSensorByID(rs.getInt("SensorId")), dateTime,dateToBeFormatted, dateTime1,dateToBeFormatted1,
-						rs.getInt("ObjectID"));
-
-				analysisList.add(currentAnalysis);
+				analysisList.add(new Analysis(configManage.getSensorByID(rs.getInt("SensorId")), dateTime,dateToBeFormatted, dateTime1,dateToBeFormatted1,
+						rs.getInt("ObjectID")));	
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		}
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return analysisList;
 	}
 	
 	@Override
-	public List<Analysis> displayAllAnalysisForPatient(int patientId,int sensorId){
-		Connection con=Database.getInstance().getConnect();
+	public List<Analysis> displayAllAnalysisForPatient(int patientId,int sensorId)
+	{
 		List<Analysis> allAnalysisList = new ArrayList<>();
-		Analysis currentAnalysis = null;
-		try {
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JviewAllAnalysis (?,?)}");
 			stmt.setInt(1, patientId);
 			stmt.setInt(2, sensorId);
@@ -198,13 +195,12 @@ public class PatientManage implements PatientRepository {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime dateTime = LocalDateTime.parse(procesedStringForDate, formatter);
 				
-				currentAnalysis = new Analysis(configManage.getSensorByID(sensorId), dateTime,procesedString,
-						rs.getInt("ObjectID"),rs.getString("Diagnostic"));
-
-				allAnalysisList.add(currentAnalysis);
+				allAnalysisList.add(new Analysis(configManage.getSensorByID(sensorId), dateTime,procesedString,
+						rs.getInt("ObjectID"),rs.getString("Diagnostic")));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return allAnalysisList;
@@ -212,13 +208,10 @@ public class PatientManage implements PatientRepository {
 
 	@Override
 	public List<Examination> displayExamination(int patientId) {
-		Examination currentExamination = null;
-		List<Examination> examinationList;
-		examinationList = new ArrayList<>();
+		List<Examination> examinationList = new ArrayList<>();
 		try {
 			CallableStatement stmt = con.prepareCall("{call JExaminationView (?)}");
 			stmt.setInt(1, patientId);
-
 			ResultSet rs = stmt.executeQuery();
 			while (rs.next()) {
 
@@ -227,25 +220,24 @@ public class PatientManage implements PatientRepository {
 				DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss");
 				LocalDateTime dateTime = LocalDateTime.parse(procesedString, formatter);
 
-				currentExamination = new Examination(
-
+				examinationList.add(new Examination(
 						rs.getInt("ObjectID"), rs.getInt("PacientId"), dateTime,procesedString, rs.getString("Diagnostic"),
-						rs.getString("Comments"));
-
-				examinationList.add(currentExamination);
+						rs.getString("Comments")));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return examinationList;
 	}
 
 	@Override
-	public List<Patient> displayPacients(int doctorID) {
+	public List<Patient> displayPacients(int doctorID) 
+	{
 		List<Patient> pacientList = new ArrayList<>();
-		try {
-
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JPacientView (?) }");
 			stmt.setInt(1, doctorID);
 			ResultSet rs = stmt.executeQuery();
@@ -256,20 +248,21 @@ public class PatientManage implements PatientRepository {
 						rs.getString("PhoneNumber"), rs.getString("EmailAddress"), rs.getString("BloodType"),
 						rs.getString("RH"), rs.getInt("DoctorID"));
 				pacientList.add(currentPatient);
-
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return pacientList;
 	}
 
 	@Override
-	public List<Patient> displayPacientsByLastName(int doctorId, String lastName) {
+	public List<Patient> displayPacientsByLastName(int doctorId, String lastName) 
+	{
 		List<Patient> pacientList = new ArrayList<>();
-		try {
-
+		try
+		{
 			CallableStatement stmt = con.prepareCall("{call JSearchByLastName (?,?) }");
 			stmt.setInt(1, doctorId);
 			stmt.setString(2, lastName);
@@ -283,8 +276,9 @@ public class PatientManage implements PatientRepository {
 				pacientList.add(currentPatient);
 
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 		return pacientList;
@@ -292,7 +286,6 @@ public class PatientManage implements PatientRepository {
 
 	@Override
 	public List<Short> getSensorData(int objectId) {
-		Connection con = Database.getInstance().getConnect();
 		List<Short> blobasShort=new ArrayList<>();
 		Blob blob=null ;
 		try {
@@ -321,51 +314,46 @@ public class PatientManage implements PatientRepository {
 					bb.put(blobAsBytes[i+1]);
 					blobasShort.add(bb.getShort(0));
 				} catch (Exception e) {
-					// TODO Auto-generated catch block
 					e.printStackTrace();
 				}
-				//System.out.println("Short: "+getShortFromLittleEndianRange(blobAsBytes[i], blobAsBytes[i+1]));
 			}
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}  
 		return blobasShort;
 	}
-	
-	
-	/*public static short toInt16(byte[] bytes, int index) throws Exception
-	{
-	if(bytes.length < 8) 
-	throw new Exception("The length of the byte array must be at least 8 bytes long.");
-	return (short)(
-	(0xff & bytes[index]) << 8   |
-	(0xff & bytes[index + 1]) << 0
-	); 
-	}*/
 
 	@Override
-	public void transferAllPatients(int senderDoctorId, int reciverDoctorId) {
-		try {
+	public void transferAllPatients(int senderDoctorId, int reciverDoctorId) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JtransferAllPatients (?,?)}");
 			stmt.setInt(1, senderDoctorId);
 			stmt.setInt(2, reciverDoctorId);
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Error during patient transfer");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void transferPatient(int receiverDocID, int patientID) {
-		try {
+	public void transferPatient(int receiverDocID, int patientID) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JTransferOnePatient (?,?)}");
 			stmt.setInt(1, receiverDocID);
 			stmt.setInt(2, patientID);
 			stmt.executeUpdate();
-		} catch (SQLException e) {
+		}
+		catch (SQLException e) 
+		{
 			System.out.println("Error during patient transfer");
 			e.printStackTrace();
 		}
@@ -373,24 +361,28 @@ public class PatientManage implements PatientRepository {
 	}
 
 	@Override
-	public void updateExamination(Examination examinationToBeUpdated) {
-		try {
+	public void updateExamination(Examination examinationToBeUpdated) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JUpdateExamination (?,?,?)}");
 			stmt.setInt(1, examinationToBeUpdated.getObjectID());
 			stmt.setString(2, examinationToBeUpdated.getComments());
 			stmt.setString(3, examinationToBeUpdated.getDiagnostic());
-
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Error during examination update");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
 
 	}
 
 	@Override
-	public void updatePacientPersonalInfo(Patient pacientToBeUpdated) {
-		try {
+	public void updatePacientPersonalInfo(Patient pacientToBeUpdated) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JupdatePersonalInfo (?,?,?,?,?,?,?,?,?)}");
 			stmt.setInt(1, pacientToBeUpdated.getIdObject());
 			stmt.setString(2, pacientToBeUpdated.getFirstName());
@@ -401,26 +393,27 @@ public class PatientManage implements PatientRepository {
 			stmt.setString(7, pacientToBeUpdated.getHomeAddress());
 			stmt.setString(8, pacientToBeUpdated.getPhoneNumber());
 			stmt.setString(9, pacientToBeUpdated.getEmailAddress());
-			// stmt.executeQuery();
 			stmt.executeUpdate();
-		} catch (SQLException e) {
-			System.out.println("Error during pacient update");
+		} 
+		catch (SQLException e) 
+		{
 			e.printStackTrace();
 		}
-
 	}
 
 	@Override
-	public void updatePacientSpecificInfo(Patient pacientToBeUpdated) {
-		try {
+	public void updatePacientSpecificInfo(Patient pacientToBeUpdated) 
+	{
+		try 
+		{
 			CallableStatement stmt = con.prepareCall("{call JupdatePatientSpecificInfo (?,?,?)}");
 			stmt.setInt(1, pacientToBeUpdated.getIdObject());
 			stmt.setString(2, pacientToBeUpdated.getBloodType());
 			stmt.setString(3, pacientToBeUpdated.getRH());
 			stmt.executeUpdate();
-			// stmt.executeQuery();
-
-		} catch (SQLException ex) {
+		} 
+		catch (SQLException ex)
+		{
 			ex.printStackTrace();
 		}
 

@@ -12,7 +12,7 @@ public interface PatientRepository {
 	
 	int addExamination(int pacientId);
 	
-	public void AddPatientWithAccount(Patient patient);
+	public void addPatientWithAccount(Patient patient);
 	
 	void deleteExaminationFromDB(int objectID);
 	

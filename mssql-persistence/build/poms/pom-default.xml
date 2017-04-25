@@ -19,16 +19,16 @@
       <scope>compile</scope>
     </dependency>
     <dependency>
-      <groupId>ro.cerner.internship</groupId>
-      <artifactId>persistence-api</artifactId>
-      <version>1.0</version>
-      <scope>compile</scope>
-    </dependency>
-    <dependency>
       <groupId>com.microsoft.sqlserver</groupId>
       <artifactId>sqljdbc4</artifactId>
       <version>4.2</version>
       <scope>runtime</scope>
+    </dependency>
+    <dependency>
+      <groupId>ro.cerner.internship</groupId>
+      <artifactId>persistence-api</artifactId>
+      <version>1.0</version>
+      <scope>compile</scope>
     </dependency>
     <dependency>
       <groupId>org.springframework</groupId>

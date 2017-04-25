@@ -38,32 +38,32 @@ public class DataReader extends Thread {
 	@Override
 	public void run() {
 		try {
-			
 			bit.startConn(configuration);
 			while (running) {
 				ArrayList<Short> auxValue = new ArrayList<>();
 				auxValue = bit.readData(configuration);
-				System.out.println("aici");
 				valueStore.addAll(auxValue);
-				System.out.println("AICI");
 				auxValue.clear();
 			}
 			bit.stopConne();
 			
-		} catch (Exception e) {
+		} 
+		catch (Exception e) 
+		{
  			e.printStackTrace();
-			System.out.println("BITalino is not connected!");
-		} finally {
+		} finally 
+		{
 			this.interrupt();
 		}
-
 	}
 
-	public synchronized void setRunning(boolean running) {
+	public synchronized void setRunning(boolean running) 
+	{
 		this.running = running;
 	}
 
-	public void setConfiguration(Configuration configuration) {
+	public void setConfiguration(Configuration configuration) 
+	{
 		this.configuration = configuration;
 	}
 

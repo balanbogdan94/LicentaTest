@@ -31,12 +31,15 @@ import javafx.scene.chart.XYChart.Data;
 import javafx.scene.chart.XYChart.Series;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.image.ImageView;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
 import javafx.scene.control.ListView;
 import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
 import javafx.scene.control.TextFormatter;
 import javafx.scene.layout.Pane;
 import javafx.stage.Stage;
@@ -62,6 +65,22 @@ public class NewConsultationController implements Initializable {
 	Doctor doctor;
 	Patient patient;
 	int idExamination;
+	@FXML
+	private Label doctorName;
+	@FXML
+	private Label patientName;
+	@FXML
+	private Label patientDOB;
+	@FXML
+	private Label patientAge;
+	@FXML
+	private Label patientRH;
+	@FXML
+	private Label patientBloodType;
+	@FXML
+	private ImageView femaleSign;
+	@FXML
+	private ImageView maleSign;
 	@FXML
 	private TextArea newDoctorComments;
 	@FXML
@@ -195,7 +214,7 @@ public class NewConsultationController implements Initializable {
 		xAxis.setUpperBound((double) xSeriesData / typeOfAnalissis.getValue().getFrequency() - 0.1);
 	}
 
-	private <T> void cancelTheConsultation(T event) {
+	public void cancelTheConsultation(MouseEvent event) {
 		DeleteModel model = SpringApplicationContext.instance().getBean("DeleteModel", DeleteModel.class);
 		Alert alert1 = new Alert(AlertType.CONFIRMATION);
 		alert1.setTitle("Confirmation Dialog");
@@ -220,6 +239,7 @@ public class NewConsultationController implements Initializable {
 				Pane root = loader.load(
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
 								.openStream());
+				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				ConsultationController pageController = (ConsultationController) loader.getController();
 				dateAndTime.getScene().setRoot(root);
 				pageController.setCurrentPatient(patient, doctor);
@@ -227,15 +247,6 @@ public class NewConsultationController implements Initializable {
 				e.printStackTrace();
 			}
 		}
-	}
-
-	@FXML
-	private void cancelTheConsultationOnButton(ActionEvent event) {
-		cancelTheConsultation(event);
-	}
-
-	public <T> void cancelTheConsultationOnX(T event) {
-		cancelTheConsultation(event);
 	}
 
 	@FXML
@@ -256,8 +267,9 @@ public class NewConsultationController implements Initializable {
 		xAxis.setUpperBound(MAX_DATA_POINTS);
 	}
 
-	public void getCurrentPatient(Patient patient) {
+	public void setCurrentPatient(Patient patient) {
 		this.patient = patient;
+		
 	}
 
 	@Override
@@ -325,8 +337,16 @@ public class NewConsultationController implements Initializable {
 	public void setAnalysis(Patient selectedPatient, Doctor currentDoctor, int id) {
 		patient = selectedPatient;
 		doctor = currentDoctor;
+		//doctorName.setText(currentDoctor.getFirstName()+" "+currentDoctor.getLastName());
 		idExamination = id;
-		//TODO
+		this.patientName.setText(patient.getFirstName() + " " + patient.getLastName());
+		this.patientDOB.setText(patient.getDateOfBirth().toString());
+		this.patientBloodType.setText(patient.getBloodType());
+		this.patientRH.setText(patient.getRH());
+		this.patientAge.setText(String.valueOf(view.patientAge(patient.getDateOfBirth())) + " years");
+		this.femaleSign.setVisible(patient.getGender().equals("F"));
+		this.maleSign.setVisible(patient.getGender().equals("M"));
+		
 	}
 
 	public void startButton(ActionEvent e)

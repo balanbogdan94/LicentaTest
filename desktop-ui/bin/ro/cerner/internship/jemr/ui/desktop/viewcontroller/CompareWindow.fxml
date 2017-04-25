@@ -1,102 +1,312 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<?import javafx.geometry.Insets?>
 <?import javafx.scene.chart.LineChart?>
 <?import javafx.scene.chart.NumberAxis?>
 <?import javafx.scene.control.Button?>
 <?import javafx.scene.control.ComboBox?>
 <?import javafx.scene.control.Label?>
-<?import javafx.scene.control.Separator?>
+<?import javafx.scene.control.MenuButton?>
+<?import javafx.scene.control.MenuItem?>
 <?import javafx.scene.control.Slider?>
 <?import javafx.scene.control.TableColumn?>
 <?import javafx.scene.control.TableView?>
-<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.ColumnConstraints?>
+<?import javafx.scene.layout.GridPane?>
+<?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.RowConstraints?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
-<AnchorPane prefHeight="800.0" prefWidth="1275.0" xmlns="http://javafx.com/javafx/8.0.60" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.CompareController">
+<GridPane xmlns="http://javafx.com/javafx/8.0.111" xmlns:fx="http://javafx.com/fxml/1" fx:controller="ro.cerner.internship.jemr.ui.desktop.viewcontroller.CompareController">
+   <columnConstraints>
+      <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+   </columnConstraints>
+   <rowConstraints>
+      <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="223.0" minHeight="10.0" prefHeight="184.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="384.0" minHeight="10.0" prefHeight="256.0" vgrow="SOMETIMES" />
+      <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+   </rowConstraints>
    <children>
-      <Separator layoutX="6.0" layoutY="49.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="60.0" />
-      <Label fx:id="doctorName" layoutX="1144.0" layoutY="23.0" prefHeight="40.0" text="Doctor Name here" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="10.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font></Label>
-      <ComboBox fx:id="analysisType" layoutX="982.0" layoutY="329.0" prefHeight="30.0" prefWidth="190.0" promptText="Select type" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="290.0" />
-      <Button fx:id="compareButton" layoutX="985.0" layoutY="329.0" mnemonicParsing="false" onAction="#compareAnalysis" prefHeight="50.0" prefWidth="190.0" text="Compare selected analysis" AnchorPane.rightAnchor="100.0" AnchorPane.topAnchor="330.0" />
-      <LineChart fx:id="lineChart" layoutX="4.0" layoutY="329.0" prefHeight="390.0" prefWidth="1267.0" AnchorPane.bottomAnchor="30.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
-        <xAxis>
-          <NumberAxis autoRanging="false" side="BOTTOM" tickUnit="25.0" fx:id="xAxis" />
-        </xAxis>
-        <yAxis>
-          <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" tickUnit="25.0" />
-        </yAxis>
-      </LineChart>
-      <Button layoutX="1209.0" layoutY="729.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="--&gt;" AnchorPane.bottomAnchor="10.0" AnchorPane.rightAnchor="10.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Button>
-      <Button layoutX="14.0" layoutY="729.0" mnemonicParsing="false" prefHeight="30.0" prefWidth="60.0" text="&lt;--" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="10.0">
-         <font>
-            <Font name="System Bold" size="14.0" />
-         </font></Button>
-      <Slider fx:id="sliderForChart" layoutX="73.0" layoutY="735.0" prefHeight="30.0" prefWidth="1130.0" AnchorPane.bottomAnchor="10.0" AnchorPane.leftAnchor="80.0" AnchorPane.rightAnchor="80.0" />
-      <Button alignment="CENTER" contentDisplay="CENTER" layoutX="1182.0" layoutY="329.0" mnemonicParsing="false" onAction="#searchOfAnalysis" prefHeight="30.0" prefWidth="80.0" text="Search" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="290.0" />
-      <TableView fx:id="analysisTable" layoutX="514.0" layoutY="80.0" prefHeight="200.0" prefWidth="713.0" AnchorPane.bottomAnchor="420.0" AnchorPane.leftAnchor="10.0" AnchorPane.rightAnchor="300.0" AnchorPane.topAnchor="60.0">
-        <columns>
-          <TableColumn fx:id="idForTable" prefWidth="75.0" text="Id" />
-          <TableColumn fx:id="consultationDateCol" prefWidth="183.0" text="Consultation Date" />
-          <TableColumn fx:id="diagnosticCol" prefWidth="346.0" text="Diagnostic" />
-          <TableColumn fx:id="freqencyCol" prefWidth="183.0" text="Frequency" />
-
-        </columns>
-      </TableView>
-      <Button fx:id="back" layoutX="789.0" layoutY="63.0" mnemonicParsing="false" onAction="#backButton" prefHeight="40.0" prefWidth="80.0" text="Back" AnchorPane.leftAnchor="10.0" AnchorPane.topAnchor="10.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="1011.0" layoutY="54.0" prefHeight="30.0" prefWidth="200.0" text="Patient Personal Info" AnchorPane.rightAnchor="50.0" AnchorPane.topAnchor="65.0">
-         <font>
-            <Font name="Times New Roman Bold" size="20.0" />
-         </font>
-      </Label>
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="963.0" layoutY="93.0" prefHeight="20.0" prefWidth="150.0" text="First Name:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="100.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="964.0" layoutY="119.0" prefHeight="20.0" prefWidth="150.0" text="Last Name:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="125.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="980.0" layoutY="145.0" prefHeight="20.0" prefWidth="150.0" text="CNP:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="150.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="972.0" layoutY="172.0" prefHeight="20.0" prefWidth="150.0" text="Gender:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="175.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="958.0" layoutY="197.0" prefHeight="20.0" prefWidth="150.0" text="Date of Birth:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="200.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="951.0" layoutY="223.0" prefHeight="20.0" prefWidth="150.0" text="Phone Number:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="225.0" />
-      <Label alignment="CENTER" contentDisplay="CENTER" layoutX="962.0" layoutY="249.0" prefHeight="20.0" prefWidth="150.0" text="Blood Type:" AnchorPane.rightAnchor="150.0" AnchorPane.topAnchor="250.0" />
-      <Label fx:id="firstName" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="93.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="100.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="lastName" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="119.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="125.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="cnp" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="145.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="150.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="gender" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="172.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="175.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="dateOfBirth" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="197.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="200.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="phoneNumber" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="223.0" prefHeight="20.0" prefWidth="150.0" text="Label" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="225.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Label fx:id="bloodType" alignment="CENTER" contentDisplay="CENTER" layoutX="1145.0" layoutY="249.0" prefHeight="20.0" prefWidth="150.0" text="Label" textFill="RED" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="250.0">
-         <font>
-            <Font name="System Bold Italic" size="14.0" />
-         </font>
-      </Label>
-      <Separator layoutX="16.0" layoutY="59.0" prefWidth="300.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="280.0" />
-      <Button fx:id="saveGraph" layoutX="1185.0" layoutY="330.0" mnemonicParsing="false" onAction="#saveGraphic" prefHeight="50.0" prefWidth="80.0" text="Save Graphic" textAlignment="CENTER" wrapText="true" AnchorPane.rightAnchor="10.0" AnchorPane.topAnchor="330.0" />
+      <GridPane styleClass="logInBackground1" stylesheets="@application.css">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="doctorName" prefHeight="40.0" prefWidth="195.0" text="Label" textFill="WHITE">
+               <font>
+                  <Font name="System Bold Italic" size="14.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="20.0" />
+               </GridPane.margin>
+            </Label>
+         </children>
+      </GridPane>
+      <VBox GridPane.rowIndex="3">
+         <children>
+            <LineChart fx:id="lineChart" prefHeight="390.0" prefWidth="1267.0">
+              <xAxis>
+                <NumberAxis autoRanging="false" side="BOTTOM" tickUnit="25.0" fx:id="xAxis" />
+              </xAxis>
+              <yAxis>
+                <NumberAxis fx:id="yAxis" autoRanging="false" side="LEFT" tickUnit="25.0" />
+              </yAxis>
+            </LineChart>
+            <Slider fx:id="sliderForChart" prefHeight="14.0" prefWidth="1257.0">
+               <VBox.margin>
+                  <Insets bottom="10.0" left="20.0" right="20.0" />
+               </VBox.margin>
+            </Slider>
+         </children>
+      </VBox>
+      <GridPane GridPane.rowIndex="2">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="929.0" minWidth="10.0" prefWidth="610.0" />
+            <ColumnConstraints hgrow="SOMETIMES" maxWidth="657.0" minWidth="10.0" prefWidth="657.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <VBox>
+               <children>
+                  <HBox>
+                     <children>
+                        <ComboBox fx:id="analysisType" prefHeight="30.0" prefWidth="190.0" promptText="Select type" />
+                        <Button alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#searchOfAnalysis" prefHeight="30.0" prefWidth="80.0" style="-fx-background-color: #2795ea;" text="Search" textFill="WHITE">
+                           <HBox.margin>
+                              <Insets left="10.0" />
+                           </HBox.margin>
+                        </Button>
+                     </children>
+                  </HBox>
+                  <TableView fx:id="analysisTable" prefHeight="146.0" prefWidth="610.0">
+                    <columns>
+                      <TableColumn fx:id="idForTable" prefWidth="75.0" text="Id" />
+                      <TableColumn fx:id="consultationDateCol" prefWidth="141.0" text="Consultation Date" />
+                      <TableColumn fx:id="diagnosticCol" prefWidth="393.0" text="Diagnostic" />
+            
+                          </columns>
+                     <VBox.margin>
+                        <Insets top="10.0" />
+                     </VBox.margin>
+                  </TableView>
+               </children>
+            </VBox>
+            <GridPane prefHeight="116.0" prefWidth="579.0" GridPane.columnIndex="1">
+               <columnConstraints>
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="173.0" minWidth="10.0" prefWidth="94.0" />
+                  <ColumnConstraints hgrow="SOMETIMES" maxWidth="262.0" minWidth="10.0" prefWidth="261.0" />
+               </columnConstraints>
+               <rowConstraints>
+                  <RowConstraints fillHeight="false" minHeight="10.0" prefHeight="30.0" vgrow="SOMETIMES" />
+               </rowConstraints>
+               <children>
+                  <ImageView fx:id="femaleSign" fitHeight="169.0" fitWidth="78.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+                     <image>
+                        <Image url="file:/E:/Proiecte/Licenta2017/jEMR/desktop-ui/src/main/java/ro/cerner/internship/jemr/ui/desktop/viewcontroller/womanSign.png" />
+                     </image>
+                  </ImageView>
+                  <ImageView fx:id="maleSign" fitHeight="182.0" fitWidth="61.0" pickOnBounds="true" preserveRatio="true" GridPane.halignment="CENTER">
+                     <image>
+                        <Image url="file:/E:/Proiecte/Licenta2017/jEMR/desktop-ui/src/main/java/ro/cerner/internship/jemr/ui/desktop/viewcontroller/manSign1.png" />
+                     </image>
+                  </ImageView>
+                  <VBox alignment="CENTER" prefHeight="185.0" prefWidth="433.0" GridPane.columnIndex="1" GridPane.halignment="CENTER" GridPane.valignment="CENTER">
+                     <children>
+                        <HBox prefHeight="21.0" prefWidth="137.0">
+                           <children>
+                              <Label prefHeight="32.0" prefWidth="61.0" text="Name: ">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="patientName" text="Label">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox>
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="124.0" text="Date Of Birth: ">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="patientDOB" text="Label">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="28.0" prefWidth="241.0">
+                           <children>
+                              <Label prefHeight="26.0" prefWidth="45.0" text="Age: ">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="patientAge" text="Label">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="27.0" prefWidth="109.0" text="Blood Type: " textFill="RED">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="patientBloodType" text="Label">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                        <HBox prefHeight="100.0" prefWidth="200.0">
+                           <children>
+                              <Label prefHeight="25.0" prefWidth="37.0" text="RH: " textFill="RED">
+                                 <font>
+                                    <Font name="Arial Bold" size="18.0" />
+                                 </font>
+                              </Label>
+                              <Label fx:id="patientRH" text="Label">
+                                 <font>
+                                    <Font size="18.0" />
+                                 </font>
+                              </Label>
+                           </children>
+                           <VBox.margin>
+                              <Insets top="10.0" />
+                           </VBox.margin>
+                        </HBox>
+                     </children>
+                     <padding>
+                        <Insets left="20.0" />
+                     </padding>
+                  </VBox>
+               </children>
+            </GridPane>
+         </children>
+         <GridPane.margin>
+            <Insets bottom="10.0" left="10.0" right="10.0" top="10.0" />
+         </GridPane.margin>
+      </GridPane>
+      <GridPane style="-fx-background-color: #dbdbdb;" GridPane.rowIndex="1">
+        <columnConstraints>
+          <ColumnConstraints hgrow="SOMETIMES" maxWidth="626.0" minWidth="10.0" prefWidth="162.0" />
+          <ColumnConstraints halignment="CENTER" hgrow="SOMETIMES" maxWidth="1105.0" minWidth="10.0" prefWidth="1105.0" />
+        </columnConstraints>
+        <rowConstraints>
+          <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
+        </rowConstraints>
+         <children>
+            <Label onMouseClicked="#backButton" text="Back" textFill="#2795ea">
+               <font>
+                  <Font size="18.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets left="10.0" />
+               </GridPane.margin>
+            </Label>
+            <Label text="Compare" GridPane.columnIndex="1">
+               <font>
+                  <Font name="Arial Bold" size="18.0" />
+               </font>
+               <padding>
+                  <Insets right="100.0" />
+               </padding>
+            </Label>
+         </children>
+      </GridPane>
+      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" style="-fx-background-color: #dbdbdb;" GridPane.rowIndex="4">
+         <children>
+            <Button fx:id="compareButton" mnemonicParsing="false" onAction="#compareAnalysis" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795ea;" text="Compare " textFill="WHITE">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Button>
+            <Button fx:id="saveGraph" mnemonicParsing="false" onAction="#saveGraphic" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795ea;" text="Save Graphic" textAlignment="CENTER" textFill="WHITE" wrapText="true">
+               <HBox.margin>
+                  <Insets right="30.0" />
+               </HBox.margin>
+            </Button>
+         </children>
+      </HBox>
+      <GridPane layoutX="10.0" layoutY="10.0" styleClass="logInBackground1" stylesheets="@application.css">
+         <columnConstraints>
+            <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
+            <ColumnConstraints halignment="RIGHT" hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
+         </columnConstraints>
+         <rowConstraints>
+            <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
+         </rowConstraints>
+         <children>
+            <Label fx:id="doctorName" alignment="CENTER" contentDisplay="CENTER" prefHeight="27.0" prefWidth="132.0" text="Label" textAlignment="JUSTIFY" textFill="WHITE">
+               <font>
+                  <Font name="Arial Bold Italic" size="16.0" />
+               </font>
+               <GridPane.margin>
+                  <Insets />
+               </GridPane.margin>
+            </Label>
+            <MenuButton alignment="CENTER_RIGHT" contentDisplay="RIGHT" mnemonicParsing="false" prefHeight="50.0" prefWidth="122.0" style="-fx-background-color: none;" text="" textFill="WHITE" GridPane.columnIndex="1">
+               <items>
+                  <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <Label alignment="CENTER" contentDisplay="CENTER" prefHeight="40.0" text="Update account">
+                           <font>
+                              <Font name="Arial Bold" size="16.0" />
+                           </font>
+                           <padding>
+                              <Insets left="20.0" />
+                           </padding>
+                        </Label>
+                     </graphic>
+                  </MenuItem>
+                  <MenuItem mnemonicParsing="false">
+                     <graphic>
+                        <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="150.0" style="-fx-background-color: none;" text="Log out">
+                           <font>
+                              <Font name="Arial Bold" size="15.0" />
+                           </font>
+                        </Button>
+                     </graphic>
+                  </MenuItem>
+               </items>
+               <font>
+                  <Font size="23.0" />
+               </font>
+            </MenuButton>
+         </children>
+      </GridPane>
    </children>
-</AnchorPane>
+</GridPane>

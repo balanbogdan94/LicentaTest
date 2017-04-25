@@ -27,13 +27,13 @@ import ro.cerner.internship.jemr.persistence.mssql.config.EncryptPassword;
 @Named("UserManage")
 public class UserManage implements UserRepository {
 
-	Connection con = Database.getInstance().getConnect();
+	Connection con = Database.getInstance().getConnection();
 
 	@Override
 	public int checkForPatient(int doctorId) {
 		int docExists = 0;
 		try {
-			Connection con = Database.getInstance().getConnect();
+			Connection con = Database.getInstance().getConnection();
 
 			CallableStatement stmt;
 
@@ -53,11 +53,10 @@ public class UserManage implements UserRepository {
 
 	@Override
 	public void updatePassword(User userToBeUpdated) {
-		EncryptPassword encrypt=new EncryptPassword();
 		try {
 			CallableStatement stmt = con.prepareCall("{call JUpdatePersonPassWordInDatabase (?,?)}");
 			stmt.setInt(1, userToBeUpdated.getIdObject());
-			stmt.setString(2, encrypt.encryptPassword(userToBeUpdated.getUserPassword()));
+			stmt.setString(2, EncryptPassword.encryptPassword(userToBeUpdated.getUserPassword()));
 			stmt.executeUpdate();
 		} catch (SQLException e) {
 			System.out.println("Error during user update");
@@ -83,35 +82,23 @@ public class UserManage implements UserRepository {
 	@Inject
 	@Named("jdbcTemplate")
 	JdbcTemplate jdbcTemplate;
-
 	@Override
 	public User VerifyLoginInfo(String username, String password) {
 		User user = null;
-
-		try {
-		EncryptPassword encrypt=new EncryptPassword();
+		try
+		{
 		SimpleJdbcCall simpleJdbcCall = new SimpleJdbcCall(jdbcTemplate);
-
 		simpleJdbcCall.withProcedureName("JCheckPassword").returningResultSet("PASSWORD_CHECK_RS",
 				new SingleColumnRowMapper<Integer>() {
 					@Override
 					public Integer mapRow(ResultSet rs, int rowNum) throws SQLException {
 						return rs.getInt("UserExists");
 					}
-
 				});
-
-		// Map<String, Object> inputParameters = new HashMap<String, Object>(){{
-		// put("Username", username);
-		// put("UserPassword", password);
-		// }};
-
-		Map<String, Object> results = simpleJdbcCall.execute(username, encrypt.encryptPassword(password));
+		Map<String, Object> results = simpleJdbcCall.execute(username, EncryptPassword.encryptPassword(password));
 		List<Integer> resultSet = (List<Integer>) results.get("PASSWORD_CHECK_RS");
 
 		int type = resultSet.get(0);
-
-		
 			switch (type) {
 			case 1:
 				user = getCurrentAdmin(username, password);
@@ -300,7 +287,6 @@ public class UserManage implements UserRepository {
 	public Integer verifyUsername(String username) {
 		int type = 0;
 		try {
-			Connection con = Database.getInstance().getConnect();
 			CallableStatement stmt = con.prepareCall("{call JCheckUsernameExists (?)}");
 			stmt.setString(1, username);
 			ResultSet rs = stmt.executeQuery();
@@ -308,7 +294,6 @@ public class UserManage implements UserRepository {
 				type = rs.getInt("UserExists");
 			}
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		return type;
