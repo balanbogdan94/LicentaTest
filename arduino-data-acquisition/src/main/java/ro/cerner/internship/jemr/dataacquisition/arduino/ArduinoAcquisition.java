@@ -3,6 +3,7 @@ package ro.cerner.internship.jemr.dataacquisition.arduino;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -33,7 +34,9 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 		streamConnection=(StreamConnection)Connector.open("btspp://98D331FC1375:1;authenticate=false;encrypt=false;master=false");
 		is = streamConnection.openInputStream();
 	    os=streamConnection.openOutputStream();
-		os.write(configuration.getFrequency());
+	    System.out.println("Configuration: "+configuration.getFrequency());
+		os.write(ArduinoHelper.freqToCharachter(configuration.getFrequency()).getBytes());
+		os.flush();
 	}
 
 	@Override
@@ -41,7 +44,6 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 		streamConnection.close();
 		is.close();
 		os.close();
-		
 	}
 	
 	private short getNumberFromArduino(){
@@ -58,7 +60,8 @@ public class ArduinoAcquisition implements BITAlinoInterface<Configuration>
 		{
 			e.printStackTrace();
 		}
-		
+		if(res.isEmpty())
+			return 0;
 		return Short.parseShort(res.trim());
 	}
 }

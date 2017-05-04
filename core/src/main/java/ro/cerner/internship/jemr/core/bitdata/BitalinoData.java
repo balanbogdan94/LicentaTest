@@ -162,7 +162,7 @@ public class BitalinoData {
 		}
 		else
 		{
-			 b=new BitalinoDataBounds(0,1023);
+			 b=new BitalinoDataBounds(200,800);
 		}
 		
 		return b;
