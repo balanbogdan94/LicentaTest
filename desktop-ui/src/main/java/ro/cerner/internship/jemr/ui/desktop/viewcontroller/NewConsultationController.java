@@ -60,27 +60,9 @@ import ro.cerner.internship.jemr.persistence.api.entity.Patient;
 import ro.cerner.internship.jemr.persistence.api.entity.Sensor;
 import ro.cerner.internship.jemr.ui.desktop.springwiring.SpringApplicationContext;
 
-public class NewConsultationController implements Initializable {
-	private static int MAX_DATA_POINTS;
-	Doctor doctor;
-	Patient patient;
+public class NewConsultationController extends BaseDoctorController implements Initializable {
+	private int MAX_DATA_POINTS;
 	int idExamination;
-	@FXML
-	private Label doctorName;
-	@FXML
-	private Label patientName;
-	@FXML
-	private Label patientDOB;
-	@FXML
-	private Label patientAge;
-	@FXML
-	private Label patientRH;
-	@FXML
-	private Label patientBloodType;
-	@FXML
-	private ImageView femaleSign;
-	@FXML
-	private ImageView maleSign;
 	@FXML
 	private TextArea newDoctorComments;
 	@FXML
@@ -97,8 +79,6 @@ public class NewConsultationController implements Initializable {
 	private Label dateAndTime;
 	@FXML
 	private ComboBox<Sensor> typeOfAnalissis;
-	private Series<Number, Number> series1;
-	private int xSeriesData = 0;
 	public ConcurrentLinkedQueue<Number> dataQ = new ConcurrentLinkedQueue<Number>();
 	@FXML
 	private NumberAxis xAxis;
@@ -110,20 +90,18 @@ public class NewConsultationController implements Initializable {
 	private ListView<String> doneAnalysis;
 	@FXML
 	private Button addExaminationButton;
+	private Series<Number,Number> series;
 	private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm");
 	private LocalDateTime startDate;
 	private LocalDateTime stopDate;
-
+	private List<Short> rawData=new ArrayList<>();
 	private ConcurrentLinkedQueue<Number> valueStore = new ConcurrentLinkedQueue<>();
 	private Configuration configuration = SpringApplicationContext.instance().getBean("ArduinoConfiguration",
 			Configuration.class);
 	private DataReader reader;
-	private ViewModel view = SpringApplicationContext.instance().getBean("ViewModel", ViewModel.class);
-	private List<Sensor> sensor = new ArrayList<>();
 	private ObservableList<String> analysisMade = FXCollections.observableArrayList();
-	private ArrayList<Short> rawData1 = new ArrayList<>();
-
 	private int maxChar = 2000;
+	private int xSeriesData=0;
 
 	AnimationTimer timer = new AnimationTimer() {
 		@Override
@@ -137,11 +115,7 @@ public class NewConsultationController implements Initializable {
 				startButton.setDisable(false);
 				saveButton.setDisable(true);
 				dropButton.setDisable(true);
-				Alert alert = new Alert(AlertType.WARNING);
-				alert.setTitle("Warning Dialog");
-				alert.setHeaderText(null);
-				alert.setContentText("BITAlino is not connected!");
-				alert.show();
+				System.out.println("Problema in timmer");
 			}
 		}
 	};
@@ -172,9 +146,10 @@ public class NewConsultationController implements Initializable {
 						getClass().getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/Consultation.fxml")
 								.openStream());
 				ConsultationController pageController = (ConsultationController) loader.getController();
-				pageController.setCurrentPatient(patient, doctor);
+				pageController.setPatientAndDoctor(getSelectedPatient(), getCurrentDoctor());
 				dropButton.getScene().setRoot(root);
-			} catch (IOException e) {
+			} catch (IOException e) 
+			{
 				e.printStackTrace();
 			}
 		}
@@ -194,18 +169,17 @@ public class NewConsultationController implements Initializable {
 		int counter = valueStore.size();
 
 		for (int i = 0; i < counter; i++) {
-			rawData1.add((Short) valueStore.remove());
-			series1.getData()
+			rawData.add((Short) valueStore.remove());
+			series.getData()
 					.add(new Data<Number, Number>(
 							(double) xSeriesData / typeOfAnalissis.getValue().getFrequency(),
-							BitalinoData.relevantDataValue(rawData1.get(rawData1.size() - 1),
+							BitalinoData.relevantDataValue(rawData.get(rawData.size() - 1),
 									typeOfAnalissis.getValue().toString(), typeOfAnalissis.getValue().getChannel())));
-
 			xSeriesData++;
 		}
 
-		if (series1.getData().size() > MAX_DATA_POINTS * typeOfAnalissis.getValue().getFrequency()) {
-			series1.getData().remove(0, series1.getData().size()
+		if (series.getData().size() > MAX_DATA_POINTS * typeOfAnalissis.getValue().getFrequency()) {
+			series.getData().remove(0, series.getData().size()
 					- MAX_DATA_POINTS * typeOfAnalissis.getValue().getFrequency());
 
 		}
@@ -242,7 +216,7 @@ public class NewConsultationController implements Initializable {
 				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				ConsultationController pageController = (ConsultationController) loader.getController();
 				dateAndTime.getScene().setRoot(root);
-				pageController.setCurrentPatient(patient, doctor);
+				pageController.setPatientAndDoctor(getSelectedPatient(), getCurrentDoctor());
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
@@ -260,16 +234,11 @@ public class NewConsultationController implements Initializable {
 	}
 
 	private void dropDataFromSeries() {
-		series1.getData().clear();
-		rawData1.clear();
+		series.getData().clear();
+		rawData.clear();
 		xSeriesData = 0;
 		xAxis.setLowerBound(0);
 		xAxis.setUpperBound(MAX_DATA_POINTS);
-	}
-
-	public void setCurrentPatient(Patient patient) {
-		this.patient = patient;
-		
 	}
 
 	@Override
@@ -280,13 +249,13 @@ public class NewConsultationController implements Initializable {
 		newDiagnostic.setTextFormatter(
 				new TextFormatter<String>(change -> change.getControlNewText().length() <= maxChar ? change : null));
 		dateAndTime.setText(LocalDateTime.now().format(formatter).toString());
-		typeOfAnalissis.getItems().addAll(view.viewListOfSensors());
+		typeOfAnalissis.getItems().addAll(viewModel.viewListOfSensors());
 		xAxis.setAutoRanging(false);
 		yAxis.setAutoRanging(false);
 		lineChart.setAnimated(false);
 		lineChart.setCreateSymbols(false);
-		series1 = new XYChart.Series<Number, Number>();
-		lineChart.getData().add(series1);
+		series = new XYChart.Series<Number, Number>();
+		lineChart.getData().add(series);
 		saveButton.setDisable(true);
 		dropButton.setDisable(true);
 		stopButton.setDisable(true);
@@ -317,7 +286,7 @@ public class NewConsultationController implements Initializable {
 	@FXML
 	public void saveDataFromChart(ActionEvent event) {
 		CreateModel model = SpringApplicationContext.instance().getBean("CreateModel", CreateModel.class);
-		Analysis analysis1 = new Analysis(idExamination, ByteConverter.rawDataToBinary(rawData1),
+		Analysis analysis1 = new Analysis(idExamination, ByteConverter.rawDataToBinary(rawData),
 				typeOfAnalissis.getValue(), startDate, stopDate);
 		model.addAnalysis(analysis1);
 		analysisMade.add(typeOfAnalissis.getValue().toString());
@@ -325,28 +294,13 @@ public class NewConsultationController implements Initializable {
 		doneAnalysis.setItems(analysisMade);
 		saveButton.setDisable(true);
 		addExaminationButton.setDisable(false);
-		rawData1.clear();
+		rawData.clear();
 		Alert alert = new Alert(AlertType.CONFIRMATION);
 		alert.setTitle("Information Dialog");
 		alert.setHeaderText(null);
 		alert.setContentText("You have added new analysis");
 		alert.showAndWait();
 		dropDataFromChart(event);
-	}
-
-	public void setAnalysis(Patient selectedPatient, Doctor currentDoctor, int id) {
-		patient = selectedPatient;
-		doctor = currentDoctor;
-		//doctorName.setText(currentDoctor.getFirstName()+" "+currentDoctor.getLastName());
-		idExamination = id;
-		this.patientName.setText(patient.getFirstName() + " " + patient.getLastName());
-		this.patientDOB.setText(patient.getDateOfBirth().toString());
-		this.patientBloodType.setText(patient.getBloodType());
-		this.patientRH.setText(patient.getRH());
-		this.patientAge.setText(String.valueOf(view.patientAge(patient.getDateOfBirth())) + " years");
-		this.femaleSign.setVisible(patient.getGender().equals("F"));
-		this.maleSign.setVisible(patient.getGender().equals("M"));
-		
 	}
 
 	public void startButton(ActionEvent e)
@@ -356,10 +310,10 @@ public class NewConsultationController implements Initializable {
 			isAllDataFromChartVisible(true);
 			startDate = LocalDateTime.now();
 			startDate.format(formatter);
-			series1.setName(typeOfAnalissis.getValue().toString());
+			series.setName(typeOfAnalissis.getValue().toString());
 			reader = SpringApplicationContext.instance().getBean("DataReader", DataReader.class);
-			String listNumeSenzori = typeOfAnalissis.getValue().toString();
-			configuration.setSensorType(listNumeSenzori);
+			configuration.setSensorType(typeOfAnalissis.getValue().toString());
+			configuration.setFrequency(typeOfAnalissis.getValue().getFrequency());
 			reader.setValueStore(valueStore);
 			reader.setConfiguration(configuration);
 			reader.start();
@@ -369,19 +323,14 @@ public class NewConsultationController implements Initializable {
 		} 
 		else 
 		{
-			stopButton.setDisable(true);
-			startButton.setDisable(false);
-			Alert alert = new Alert(AlertType.WARNING);
-			alert.setTitle("Information Dialog");
-			alert.setHeaderText(null);
-			alert.setContentText("Select Sensor / Channel / Frequency!");
-			alert.showAndWait();
+			patientNotSelectedAlert();
 		}
 	}
 
 	public void stopButton(ActionEvent e) {
 		try 
 		{
+			System.out.println("Seria: "+series.getData().size());
 			stopDate = LocalDateTime.now();
 			stopDate.format(formatter);
 			reader.setRunning(false);
@@ -395,5 +344,14 @@ public class NewConsultationController implements Initializable {
 			e1.printStackTrace();
 		}
 	}
+
+	public void setAnalysis(Patient selectedPatient, Doctor currentDoctor, int id) {
+		setCurrentDoctor(currentDoctor);
+		setSelectedPatient(selectedPatient);
+		idExamination=id;
+		
+	}
+	
+	
 
 }

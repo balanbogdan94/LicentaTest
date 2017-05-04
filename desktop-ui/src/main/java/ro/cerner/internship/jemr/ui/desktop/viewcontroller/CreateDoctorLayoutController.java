@@ -2,23 +2,14 @@ package ro.cerner.internship.jemr.ui.desktop.viewcontroller;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Optional;
 import java.util.ResourceBundle;
 
-import javafx.application.Platform;
 import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.fxml.FXML;
-import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Node;
-import javafx.scene.Scene;
 import javafx.scene.control.Alert;
-import javafx.scene.control.ButtonType;
 import javafx.scene.control.Alert.AlertType;
-import javafx.scene.layout.Pane;
-import javafx.stage.Stage;
-import javafx.stage.WindowEvent;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.DatePicker;
 import javafx.scene.control.PasswordField;
@@ -42,7 +33,7 @@ public class CreateDoctorLayoutController implements Initializable {
 	@FXML
 	private TextField phoneNumber;
 	@FXML
-	private ComboBox gender;
+	private ComboBox<String> gender;
 	@FXML
 	private DatePicker dateOfBirth;
 	@FXML
@@ -68,7 +59,7 @@ public class CreateDoctorLayoutController implements Initializable {
 
 	Admin admin;
 
-	@SuppressWarnings("unchecked")
+
 	@Override
 	public void initialize(URL location, ResourceBundle resources) {
 		// TODO Auto-generated method stub

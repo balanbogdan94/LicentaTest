@@ -196,7 +196,7 @@
           <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
         </rowConstraints>
          <children>
-            <Label id="doctorName" text="Label" textFill="WHITE">
+            <Label fx:id="doctorName" text="Label" textFill="WHITE">
                <font>
                   <Font name="Arial Bold Italic" size="18.0" />
                </font>

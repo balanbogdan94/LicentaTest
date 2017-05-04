@@ -39,7 +39,7 @@
             <RowConstraints minHeight="10.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
-            <Label fx:id="nameOfDoctor" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="133.0" text="Label" textFill="WHITE">
+            <Label fx:id="doctorName" alignment="CENTER" contentDisplay="CENTER" prefHeight="20.0" prefWidth="133.0" text="Label" textFill="WHITE">
                <font>
                   <Font name="Arial Bold Italic" size="16.0" />
                </font>
@@ -260,12 +260,12 @@
                   <Insets right="30.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="viewConsultation" mnemonicParsing="false" onAction="#viewOldConsultationOnButton" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="View " textFill="WHITE">
+            <Button fx:id="viewConsultation" disable="true" mnemonicParsing="false" onAction="#viewOldConsultationOnButton" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="View " textFill="WHITE">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin>
             </Button>
-            <Button fx:id="deleteConsultation" cancelButton="true" mnemonicParsing="false" onAction="#deleteSelectedExamination" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Delete " textFill="WHITE">
+            <Button fx:id="deleteConsultation" cancelButton="true" disable="true" mnemonicParsing="false" onAction="#deleteSelectedExamination" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Delete " textFill="WHITE">
                <HBox.margin>
                   <Insets right="30.0" />
                </HBox.margin>

@@ -25,10 +25,10 @@
             <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" />
          </columnConstraints>
          <rowConstraints>
-            <RowConstraints maxHeight="60.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="10.0" prefHeight="40.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="40.0" vgrow="SOMETIMES" />
             <RowConstraints fillHeight="false" maxHeight="580.0" minHeight="10.0" prefHeight="580.0" vgrow="SOMETIMES" />
-            <RowConstraints maxHeight="40.0" minHeight="0.0" prefHeight="0.0" vgrow="SOMETIMES" />
+            <RowConstraints maxHeight="40.0" minHeight="40.0" prefHeight="0.0" vgrow="SOMETIMES" />
          </rowConstraints>
          <children>
             <GridPane prefHeight="60.0" prefWidth="1300.0" styleClass="logInBackground1" stylesheets="@application.css">
@@ -38,7 +38,7 @@
                   <ColumnConstraints hgrow="SOMETIMES" minWidth="10.0" prefWidth="100.0" />
               </columnConstraints>
               <rowConstraints>
-                <RowConstraints minHeight="10.0" prefHeight="50.0" vgrow="SOMETIMES" />
+                <RowConstraints maxHeight="60.0" minHeight="60.0" prefHeight="60.0" vgrow="SOMETIMES" />
               </rowConstraints>
                <children>
                   <VBox alignment="CENTER_RIGHT" prefHeight="0.0" prefWidth="433.0" GridPane.columnIndex="2">
@@ -59,7 +59,7 @@
                               </MenuItem>
                               <MenuItem mnemonicParsing="false">
                                  <graphic>
-                                    <Button mnemonicParsing="false" onAction="#signOut" prefHeight="40.0" prefWidth="148.0" style="-fx-background-color: none;" text="Log out">
+                                    <Button mnemonicParsing="false" onAction="#logOut" prefHeight="40.0" prefWidth="148.0" style="-fx-background-color: none;" text="Log out">
                                        <font>
                                           <Font name="Arial Bold" size="15.0" />
                                        </font>
@@ -104,8 +104,8 @@
                            <children>
                               <StackPane alignment="CENTER_RIGHT" prefHeight="30.0" prefWidth="255.0">
                                  <children>
-                                    <TextField fx:id="textInput" onKeyPressed="#searchOnEnter" prefHeight="25.0" prefWidth="205.0" promptText="Type Last Name" />
-                                    <Button fx:id="search" mnemonicParsing="false" onAction="#searchOnClick" onKeyPressed="#searchOnEnter" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: #2795EA;" text="" textFill="WHITE" />
+                                    <TextField fx:id="textInput" onAction="#search" prefHeight="25.0" prefWidth="205.0" promptText="Type Last Name" />
+                                    <Button fx:id="search" defaultButton="true" mnemonicParsing="false" onAction="#search" prefHeight="25.0" prefWidth="42.0" style="-fx-background-color: #2795EA;" text="" textFill="WHITE" />
                                  </children>
                               </StackPane>
                            </children>
@@ -115,13 +115,13 @@
                               <Insets top="10.0" />
                            </VBox.margin>
                            <children>
-                              <TableView fx:id="patientTableView" prefHeight="472.0" prefWidth="714.0">
+                              <TableView fx:id="patientTableView" fixedCellSize="50.0" prefHeight="472.0" prefWidth="714.0">
                                  <columns>
-                                    <TableColumn fx:id="tableFirstNameView" resizable="false" text="First Name" />
-                                    <TableColumn fx:id="tableLastNameView" resizable="false" text="Last Name" />
-                                    <TableColumn fx:id="tableAgeView" resizable="false" text="Age" />
-                                    <TableColumn fx:id="tableBloodTypeView" minWidth="0.0" resizable="false" text="Blood type" />
-                                    <TableColumn fx:id="tableRHView" resizable="false" text="RH" />
+                                    <TableColumn fx:id="tableFirstNameView" prefWidth="170.00003051757812" resizable="false" text="First Name" />
+                                    <TableColumn fx:id="tableLastNameView" prefWidth="161.99996948242188" resizable="false" text="Last Name" />
+                                    <TableColumn fx:id="tableAgeView" prefWidth="170.0" resizable="false" text="Date Of Birth" />
+                                    <TableColumn fx:id="tableBloodTypeView" minWidth="0.0" prefWidth="134.0" resizable="false" text="Blood type" />
+                                    <TableColumn fx:id="tableRHView" prefWidth="77.0" resizable="false" text="RH" />
                                  </columns>
                               </TableView>
                            </children>
@@ -135,7 +135,7 @@
                               <Font name="Arial Bold" size="18.0" />
                            </font>
                         </Label>
-                        <PieChart fx:id="sexChart" labelsVisible="false" prefHeight="350.0" prefWidth="444.0" />
+                        <PieChart fx:id="sexChart" prefHeight="350.0" prefWidth="444.0" />
                      </children>
                   </VBox>
                </children>
@@ -150,22 +150,22 @@
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="deleteButton" mnemonicParsing="false" onAction="#deleteSelectedPatient" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Delete " textFill="WHITE">
+                  <Button fx:id="deleteButton" disable="true" mnemonicParsing="false" onAction="#deleteSelectedPatient" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Delete " textFill="WHITE">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="updateButton" mnemonicParsing="false" onAction="#updateSelectedPacient" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="View Info" textFill="WHITE">
+                  <Button fx:id="updateButton" disable="true" mnemonicParsing="false" onAction="#updateSelectedPacient" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="View Info" textFill="WHITE">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="viewClinicalHistory" mnemonicParsing="false" onAction="#viewClinicalHistoryOnButton" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Clinical History" textFill="WHITE">
+                  <Button fx:id="viewClinicalHistory" disable="true" mnemonicParsing="false" onAction="#viewClinicalHistoryOnButton" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Clinical History" textFill="WHITE">
                      <HBox.margin>
                         <Insets right="30.0" />
                      </HBox.margin>
                   </Button>
-                  <Button fx:id="transferButton" mnemonicParsing="false" onAction="#transfer" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Transfer " textFill="WHITE" />
+                  <Button fx:id="transferButton" disable="true" mnemonicParsing="false" onAction="#transfer" prefHeight="25.0" prefWidth="100.0" style="-fx-background-color: #2795EA;" text="Transfer " textFill="WHITE" />
                </children>
             </HBox>
          </children>

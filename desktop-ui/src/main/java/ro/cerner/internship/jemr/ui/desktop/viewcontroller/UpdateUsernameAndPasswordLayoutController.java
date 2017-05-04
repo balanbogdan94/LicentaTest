@@ -127,7 +127,7 @@ public class UpdateUsernameAndPasswordLayoutController implements Initializable 
 			root = loader.load(getClass()
 					.getResource("/ro/cerner/internship/jemr/ui/desktop/viewcontroller/FirstPage.fxml").openStream());
 			FirstPageController doctorView = (FirstPageController) loader.getController();
-			doctorView.getCurrentDoctor(currentDoctor);
+			doctorView.setStageInfo(currentDoctor);
 			Scene scene = new Scene(root);
 			primaryStage.setScene(scene);
 			primaryStage.setMaximized(true);

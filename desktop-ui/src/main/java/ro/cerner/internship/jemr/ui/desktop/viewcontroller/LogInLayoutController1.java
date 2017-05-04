@@ -80,7 +80,7 @@ public class LogInLayoutController1 {
 								.openStream());
 				root.getStylesheets().add(getClass().getResource("application.css").toExternalForm());
 				FirstPageController pageController = (FirstPageController) loader.getController();
-				pageController.getCurrentDoctor(((Doctor)curentUser));
+				pageController.setStageInfo(((Doctor)curentUser));
 				messageLabel.getScene().setRoot(root);				
 			}
 		}

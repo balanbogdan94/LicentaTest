@@ -99,7 +99,7 @@ public class CreatePatientController implements Initializable {
 			Patient createdPatient = new Patient(3, firstName.getText(), lastName.getText(), cnp.getText(),
 					genderComboBox.getValue().toString(), DateOfBirth.getValue(), homeAddress.getText(),
 					phoneNumber.getText(), emailAddress.getText(), bloodType.getValue().toString(),
-					rhType.getValue().toString(), this.controller.currentDoctor.getObjectID(), username.getText(), password.getText());
+					rhType.getValue().toString(), this.controller.getCurrentDoctor().getObjectID(), username.getText(), password.getText());
 
 			CreateModel createdModel = SpringApplicationContext.instance().getBean("CreateModel", CreateModel.class);
 			createdModel.addPatient(createdPatient);

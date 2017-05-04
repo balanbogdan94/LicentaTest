@@ -306,7 +306,7 @@
                   <Font name="Arial Bold" size="18.0" />
                </font>
             </Label>
-            <Label onMouseClicked="#exit" text="Back" textFill="#2795ea">
+            <Label onMouseClicked="#backToDoctorView" text="Back" textFill="#2795ea">
                <font>
                   <Font size="18.0" />
                </font>
